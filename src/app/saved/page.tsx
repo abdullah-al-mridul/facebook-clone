@@ -9,11 +9,19 @@ import { User } from '@/types';
 import { useState } from 'react';
 import Chatbox from '@/components/chrono-feed/chatbox';
 import MinimizedChat from '@/components/chrono-feed/minimized-chat';
+import SavedItem from '@/components/chrono-feed/saved-item';
 
 type ChatWindowState = {
   user: User;
   isMinimized: boolean;
 };
+
+const dummySavedItems = [
+    { title: '10 Tips for Better Time Management', source: 'ProductivityHub.com', type: 'link', imageUrl: 'https://placehold.co/150x150.png', imageHint: 'clock time' },
+    { title: 'React Best Practices 2024', source: 'Posted by Michael Chen', type: 'post', imageUrl: 'https://placehold.co/150x150.png', imageHint: 'code abstract' },
+    { title: 'Summer Road Trip Playlist', source: 'Spotify', type: 'music', imageUrl: 'https://placehold.co/150x150.png', imageHint: 'music notes' },
+    { title: 'Hiking a Volcano in Iceland', source: 'Epic Travel Videos', type: 'video', imageUrl: 'https://placehold.co/150x150.png', imageHint: 'volcano landscape' },
+];
 
 export default function SavedPage() {
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
@@ -71,9 +79,15 @@ export default function SavedPage() {
       <div className="flex">
         <LeftSidebar />
         <main className="flex-1 lg:pl-72 pt-14">
-          <div className="p-4 sm:p-6 lg:p-8 w-full max-w-2xl mx-auto">
-            <h1 className="text-2xl font-bold">Saved</h1>
-            <p className="text-muted-foreground">This is the saved page.</p>
+          <div className="p-4 sm:p-6 lg:p-8 w-full max-w-3xl mx-auto">
+            <h1 className="text-2xl font-bold mb-4">Saved Items</h1>
+             <div className="bg-card rounded-lg shadow-sm">
+                <ul className="divide-y divide-border">
+                    {dummySavedItems.map((item) => (
+                       <SavedItem key={item.title} item={item} />
+                    ))}
+                </ul>
+            </div>
           </div>
         </main>
       </div>

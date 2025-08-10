@@ -9,11 +9,19 @@ import { User } from '@/types';
 import { useState } from 'react';
 import Chatbox from '@/components/chrono-feed/chatbox';
 import MinimizedChat from '@/components/chrono-feed/minimized-chat';
+import VideoCard from '@/components/chrono-feed/video-card';
 
 type ChatWindowState = {
   user: User;
   isMinimized: boolean;
 };
+
+const dummyVideos = [
+    { title: 'How to make the perfect cup of coffee', uploader: 'Coffee Lovers', views: '1.2M views', thumbnailUrl: 'https://placehold.co/400x225.png', thumbnailHint: 'coffee cup' },
+    { title: 'A Day in the Life of a Software Engineer', uploader: 'Tech Vlogs', views: '876k views', thumbnailUrl: 'https://placehold.co/400x225.png', thumbnailHint: 'laptop code' },
+    { title: '10 Minute Morning Yoga Flow', uploader: 'Yoga with Adrienne', views: '3.1M views', thumbnailUrl: 'https://placehold.co/400x225.png', thumbnailHint: 'yoga person' },
+    { title: 'DIY Home Office Makeover', uploader: 'Home Decor Central', views: '543k views', thumbnailUrl: 'https://placehold.co/400x225.png', thumbnailHint: 'office desk' },
+];
 
 export default function WatchPage() {
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
@@ -71,9 +79,13 @@ export default function WatchPage() {
       <div className="flex">
         <LeftSidebar />
         <main className="flex-1 lg:pl-72 pt-14">
-          <div className="p-4 sm:p-6 lg:p-8 w-full max-w-2xl mx-auto">
-            <h1 className="text-2xl font-bold">Watch</h1>
-            <p className="text-muted-foreground">This is the watch page.</p>
+          <div className="p-4 sm:p-6 lg:p-8 w-full max-w-4xl mx-auto">
+            <h1 className="text-2xl font-bold mb-4">Watch</h1>
+            <div className="space-y-6">
+                {dummyVideos.map((video) => (
+                    <VideoCard key={video.title} video={video} />
+                ))}
+            </div>
           </div>
         </main>
       </div>

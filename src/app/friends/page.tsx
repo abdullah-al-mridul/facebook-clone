@@ -9,11 +9,23 @@ import { User } from '@/types';
 import { useState } from 'react';
 import Chatbox from '@/components/chrono-feed/chatbox';
 import MinimizedChat from '@/components/chrono-feed/minimized-chat';
+import FriendCard from '@/components/chrono-feed/friend-card';
 
 type ChatWindowState = {
   user: User;
   isMinimized: boolean;
 };
+
+const dummyFriends: User[] = [
+    { name: 'Sarah Miller', avatarUrl: 'https://placehold.co/100x100/E5E7EB/4B5563.png' },
+    { name: 'Michael Chen', avatarUrl: 'https://placehold.co/100x100/9CA3AF/FFFFFF.png' },
+    { name: 'Emily Davis', avatarUrl: 'https://placehold.co/100x100/F3F4F6/1F2937.png' },
+    { name: 'David Rodriguez', avatarUrl: 'https://placehold.co/100x100.png' },
+    { name: 'Jessica White', avatarUrl: 'https://placehold.co/100x100/D1D5DB/374151.png' },
+    { name: 'Chris Lee', avatarUrl: 'https://placehold.co/100x100/4B5563/E5E7EB.png' },
+    { name: 'Amanda Taylor', avatarUrl: 'https://placehold.co/100x100/FFFFFF/9CA3AF.png' },
+    { name: 'James Brown', avatarUrl: 'https://placehold.co/100x100/1F2937/F3F4F6.png' },
+];
 
 export default function FriendsPage() {
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
@@ -71,9 +83,13 @@ export default function FriendsPage() {
       <div className="flex">
         <LeftSidebar />
         <main className="flex-1 lg:pl-72 pt-14">
-          <div className="p-4 sm:p-6 lg:p-8 w-full max-w-2xl mx-auto">
-            <h1 className="text-2xl font-bold">Friends</h1>
-            <p className="text-muted-foreground">This is the friends page.</p>
+          <div className="p-4 sm:p-6 lg:p-8 w-full max-w-5xl mx-auto">
+            <h1 className="text-2xl font-bold mb-4">Friends</h1>
+             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {dummyFriends.map((friend) => (
+                    <FriendCard key={friend.name} user={friend} />
+                ))}
+            </div>
           </div>
         </main>
       </div>

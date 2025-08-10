@@ -5,14 +5,28 @@ import Header from '@/components/chrono-feed/header';
 import LeftSidebar from '@/components/chrono-feed/left-sidebar';
 import MessageDrawer from '@/components/chrono-feed/message-drawer';
 import NotificationDrawer from '@/components/chrono-feed/notification-drawer';
-import { User } from '@/types';
+import { PostType, User } from '@/types';
 import { useState } from 'react';
 import Chatbox from '@/components/chrono-feed/chatbox';
 import MinimizedChat from '@/components/chrono-feed/minimized-chat';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import Post from '@/components/chrono-feed/post';
 
 type ChatWindowState = {
   user: User;
   isMinimized: boolean;
+};
+
+const memoryPost: PostType = {
+    id: 'memory-1',
+    user: { name: 'Current User', avatarUrl: 'https://placehold.co/40x40.png' },
+    timestamp: '1 year ago',
+    content: 'Throwback to this amazing trip! Can\'t believe it\'s already been a year. We need to go back!',
+    imageUrl: 'https://placehold.co/600x400.png',
+    imageHint: 'travel beach',
+    likes: 150,
+    comments: 25,
+    shares: 10,
 };
 
 export default function MemoriesPage() {
@@ -72,8 +86,15 @@ export default function MemoriesPage() {
         <LeftSidebar />
         <main className="flex-1 lg:pl-72 pt-14">
           <div className="p-4 sm:p-6 lg:p-8 w-full max-w-2xl mx-auto">
-            <h1 className="text-2xl font-bold">Memories</h1>
-            <p className="text-muted-foreground">This is the memories page.</p>
+            <h1 className="text-2xl font-bold mb-4">Memories</h1>
+            <Card>
+                <CardHeader>
+                    <CardTitle>On This Day</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <Post post={memoryPost} />
+                </CardContent>
+            </Card>
           </div>
         </main>
       </div>

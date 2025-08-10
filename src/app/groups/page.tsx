@@ -9,11 +9,19 @@ import { User } from '@/types';
 import { useState } from 'react';
 import Chatbox from '@/components/chrono-feed/chatbox';
 import MinimizedChat from '@/components/chrono-feed/minimized-chat';
+import GroupCard from '@/components/chrono-feed/group-card';
 
 type ChatWindowState = {
   user: User;
   isMinimized: boolean;
 };
+
+const dummyGroups = [
+    { name: 'Next.js Developers', members: '125k members', coverUrl: 'https://placehold.co/400x150.png', coverHint: 'code technology' },
+    { name: 'React Community', members: '2.3M members', coverUrl: 'https://placehold.co/400x150.png', coverHint: 'abstract community' },
+    { name: 'Design Geeks', members: '50k members', coverUrl: 'https://placehold.co/400x150.png', coverHint: 'design art' },
+    { name: 'Food Lovers', members: '780k members', coverUrl: 'https://placehold.co/400x150.png', coverHint: 'food dinner' },
+]
 
 export default function GroupsPage() {
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
@@ -71,9 +79,13 @@ export default function GroupsPage() {
       <div className="flex">
         <LeftSidebar />
         <main className="flex-1 lg:pl-72 pt-14">
-          <div className="p-4 sm:p-6 lg:p-8 w-full max-w-2xl mx-auto">
-            <h1 className="text-2xl font-bold">Groups</h1>
-            <p className="text-muted-foreground">This is the groups page.</p>
+          <div className="p-4 sm:p-6 lg:p-8 w-full max-w-4xl mx-auto">
+            <h1 className="text-2xl font-bold mb-4">Groups</h1>
+             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {dummyGroups.map((group) => (
+                    <GroupCard key={group.name} group={group} />
+                ))}
+            </div>
           </div>
         </main>
       </div>
