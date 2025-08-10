@@ -73,7 +73,9 @@ export default function Home() {
         onOpenChange={setIsNotificationDrawerOpen}
       />
       <div className="flex">
-        <LeftSidebar />
+        <div className="fixed top-14 left-0 h-[calc(100vh-56px)] w-72 hidden lg:block">
+          <LeftSidebar />
+        </div>
         <main className="flex-1 lg:pl-72 pt-14">
           <div className="p-4 sm:p-6 lg:p-8 w-full max-w-2xl mx-auto">
             <NewsFeed />

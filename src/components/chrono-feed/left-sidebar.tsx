@@ -12,7 +12,7 @@ const SidebarLink = ({ href, icon: Icon, text }: { href: string; icon: React.Ele
 
 export default function LeftSidebar() {
   return (
-    <aside className="fixed top-0 left-0 h-screen w-72 bg-card p-4 hidden lg:block overflow-y-auto lg:top-14">
+    <aside className="h-full w-full bg-card p-4 overflow-y-auto">
        <div className="flex flex-col gap-2 pt-14 lg:pt-0">
         <Link href="/profile" className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
           <Avatar className="h-9 w-9">
