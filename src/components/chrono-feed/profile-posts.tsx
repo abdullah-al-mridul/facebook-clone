@@ -5,6 +5,8 @@ import CreatePost from './create-post';
 import Post from './post';
 import PostDialog from './post-dialog';
 import { samplePosts } from '@/lib/data';
+import ProfileAbout from './profile-about';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 export default function ProfilePosts() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -12,7 +14,7 @@ export default function ProfilePosts() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         <div className="md:col-span-5">
-            <Card>
+             <Card>
                 <CardHeader>
                     <CardTitle>About</CardTitle>
                 </CardHeader>
@@ -31,4 +33,3 @@ export default function ProfilePosts() {
     </div>
   );
 }
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

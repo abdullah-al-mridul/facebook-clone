@@ -5,7 +5,12 @@ import { Camera, Pencil } from "lucide-react";
 import Image from "next/image";
 import ProfileTabs from "./profile-tabs";
 
-export default function ProfileHeader() {
+type ProfileHeaderProps = {
+    activeTab: string;
+    onTabChange: (tab: string) => void;
+};
+
+export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderProps) {
   return (
     <div className="bg-card shadow-sm">
       <div className="relative h-64 md:h-96 w-full">
@@ -47,7 +52,7 @@ export default function ProfileHeader() {
             </div>
         </div>
       </div>
-      <ProfileTabs />
+      <ProfileTabs activeTab={activeTab} onTabChange={onTabChange} />
     </div>
   );
 }

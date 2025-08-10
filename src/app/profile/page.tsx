@@ -5,11 +5,11 @@ import Header from '@/components/chrono-feed/header';
 import LeftSidebar from '@/components/chrono-feed/left-sidebar';
 import ProfileHeader from '@/components/chrono-feed/profile-header';
 import ProfilePosts from '@/components/chrono-feed/profile-posts';
-import { Separator } from '@/components/ui/separator';
 import { useState } from 'react';
 import MessageDrawer from '@/components/chrono-feed/message-drawer';
 import NotificationDrawer from '@/components/chrono-feed/notification-drawer';
 import { User } from '@/types';
+import ProfileAbout from '@/components/chrono-feed/profile-about';
 
 type ChatWindowState = {
   user: User;
@@ -20,6 +20,7 @@ export default function ProfilePage() {
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
   const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] = useState(false);
   const [openChats, setOpenChats] = useState<ChatWindowState[]>([]);
+  const [activeTab, setActiveTab] = useState('Posts');
 
   const handleUserSelect = (user: User) => {
     setIsMessageDrawerOpen(false);
@@ -41,6 +42,22 @@ export default function ProfilePage() {
     }
   };
 
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'Posts':
+        return <ProfilePosts />;
+      case 'About':
+        return <ProfileAbout />;
+      case 'Friends':
+        return <div className="text-center py-10">Friends content goes here.</div>;
+      case 'Photos':
+        return <div className="text-center py-10">Photos content goes here.</div>;
+      default:
+        return <ProfilePosts />;
+    }
+  };
+
+
   return (
     <div className="min-h-screen bg-background">
       <Header 
@@ -60,10 +77,9 @@ export default function ProfilePage() {
         <LeftSidebar />
         <main className="flex-1 lg:pl-72 pt-14">
           <div className="w-full max-w-5xl mx-auto">
-            <ProfileHeader />
-            <Separator />
+            <ProfileHeader activeTab={activeTab} onTabChange={setActiveTab}/>
             <div className="p-4 sm:p-6 lg:p-8">
-              <ProfilePosts />
+              {renderContent()}
             </div>
           </div>
         </main>
