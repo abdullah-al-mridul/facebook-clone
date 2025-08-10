@@ -1,3 +1,5 @@
+
+'use client';
 import Image from 'next/image';
 import type { PostType } from '@/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -5,12 +7,26 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { MessageSquare, MoreHorizontal, Share2, ThumbsUp } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useState } from 'react';
 
 type PostProps = {
   post: PostType;
 };
 
+const Reaction = ({ children }: { children: React.ReactNode }) => (
+  <span className="text-2xl cursor-pointer transition-transform hover:scale-125">{children}</span>
+);
+
 export default function Post({ post }: PostProps) {
+  const [reaction, setReaction] = useState('Like');
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
+  const handleReaction = (newReaction: string) => {
+    setReaction(newReaction);
+    setIsPopoverOpen(false);
+  }
+  
   return (
     <Card>
       <CardHeader className="p-4">
@@ -63,10 +79,25 @@ export default function Post({ post }: PostProps) {
 
       <CardFooter className="p-1">
         <div className="flex justify-around w-full">
-          <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground font-semibold">
-            <ThumbsUp />
-            Like
-          </Button>
+          <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground font-semibold">
+                <ThumbsUp />
+                {reaction}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto bg-card p-2 rounded-full">
+              <div className="flex gap-2">
+                <Reaction><span onClick={() => handleReaction('👍 Like')}>👍</span></Reaction>
+                <Reaction><span onClick={() => handleReaction('❤️ Love')}>❤️</span></Reaction>
+                <Reaction><span onClick={() => handleReaction('😂 Haha')}>😂</span></Reaction>
+                <Reaction><span onClick={() => handleReaction('😮 Wow')}>😮</span></Reaction>
+                <Reaction><span onClick={() => handleReaction('😢 Sad')}>😢</span></Reaction>
+                <Reaction><span onClick={() => handleReaction('😡 Angry')}>😡</span></Reaction>
+              </div>
+            </PopoverContent>
+          </Popover>
+
           <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground font-semibold">
             <MessageSquare />
             Comment

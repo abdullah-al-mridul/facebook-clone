@@ -1,6 +1,10 @@
+
+'use client';
+import { useState } from 'react';
 import CreatePost from './create-post';
 import Post from './post';
 import type { PostType } from '@/types';
+import PostDialog from './post-dialog';
 
 const samplePosts: PostType[] = [
   {
@@ -38,12 +42,15 @@ const samplePosts: PostType[] = [
 
 
 export default function NewsFeed() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   return (
     <div className="space-y-6">
-      <CreatePost />
+      <CreatePost onOpenDialog={() => setIsDialogOpen(true)} />
       {samplePosts.map((post) => (
         <Post key={post.id} post={post} />
       ))}
+      <PostDialog isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} />
     </div>
   );
 }
