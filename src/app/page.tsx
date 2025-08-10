@@ -52,6 +52,9 @@ export default function Home() {
       )
     );
   };
+  
+  const minimizedChats = openChats.filter(chat => chat.isMinimized);
+  const expandedChats = openChats.filter(chat => !chat.isMinimized);
 
 
   return (
@@ -73,23 +76,26 @@ export default function Home() {
         </main>
       </div>
       <div className="fixed bottom-0 right-4 flex items-end gap-4">
-        {openChats.map((chat) => 
-          chat.isMinimized ? (
+         {/* Minimized chats on the left of expanded ones */}
+        {minimizedChats.map((chat) => (
             <MinimizedChat 
               key={chat.user.name} 
               user={chat.user} 
               onClose={() => closeChat(chat.user.name)}
               onExpand={() => toggleMinimize(chat.user.name)}
               />
-          ) : (
-            <Chatbox 
-              key={chat.user.name} 
-              user={chat.user} 
-              onClose={() => closeChat(chat.user.name)} 
-              onMinimize={() => toggleMinimize(chat.user.name)}
-            />
-          )
-        )}
+        ))}
+         {/* Vertical stack of expanded chats */}
+        <div className="flex flex-col gap-4">
+            {expandedChats.map((chat) => (
+                <Chatbox 
+                  key={chat.user.name} 
+                  user={chat.user} 
+                  onClose={() => closeChat(chat.user.name)} 
+                  onMinimize={() => toggleMinimize(chat.user.name)}
+                />
+            ))}
+        </div>
       </div>
     </div>
   );
