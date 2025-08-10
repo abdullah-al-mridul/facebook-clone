@@ -5,7 +5,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
-import { Image, Smile, Video, User } from 'lucide-react';
+import { Image as ImageIcon, Smile, User, Video, X } from 'lucide-react';
+import Image from 'next/image';
+import { useRef, useState } from 'react';
 
 type PostDialogProps = {
   isOpen: boolean;
@@ -13,8 +15,40 @@ type PostDialogProps = {
 };
 
 export default function PostDialog({ isOpen, onOpenChange }: PostDialogProps) {
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    if(fileInputRef.current) {
+        fileInputRef.current.value = '';
+    }
+  }
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  }
+
+  const handleClose = (open: boolean) => {
+    if (!open) {
+        handleRemoveImage();
+    }
+    onOpenChange(open);
+  }
+
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="text-center">Create Post</DialogTitle>
@@ -33,10 +67,19 @@ export default function PostDialog({ isOpen, onOpenChange }: PostDialogProps) {
           placeholder="What's on your mind?"
           className="min-h-[120px] text-lg border-none focus-visible:ring-0"
         />
+        {imagePreview && (
+          <div className="relative border rounded-lg overflow-hidden">
+            <Image src={imagePreview} alt="Image preview" width={480} height={270} className="w-full h-auto object-cover" />
+            <Button variant="secondary" size="icon" className="absolute top-2 right-2 rounded-full h-8 w-8" onClick={handleRemoveImage}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
         <div className="flex justify-between items-center p-2 border rounded-lg">
             <span>Add to your post</span>
             <div className="flex gap-1">
-                <Button variant="ghost" size="icon"><Image className="h-6 w-6 text-green-500" /></Button>
+                <input type="file" ref={fileInputRef} onChange={handleImageChange} accept="image/*" className="hidden" />
+                <Button variant="ghost" size="icon" onClick={handleImageClick}><ImageIcon className="h-6 w-6 text-green-500" /></Button>
                 <Button variant="ghost" size="icon"><User className="h-6 w-6 text-blue-500" /></Button>
                 <Button variant="ghost" size="icon"><Smile className="h-6 w-6 text-yellow-500" /></Button>
                 <Button variant="ghost" size="icon"><Video className="h-6 w-6 text-red-500" /></Button>
