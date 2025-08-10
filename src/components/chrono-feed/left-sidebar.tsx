@@ -21,12 +21,12 @@ export default function LeftSidebar() {
           </Avatar>
           <span className="font-semibold">Current User</span>
         </Link>
-        <SidebarLink href="#" icon={Users} text="Friends" />
-        <SidebarLink href="#" icon={UserSquare2} text="Groups" />
-        <SidebarLink href="#" icon={Store} text="Marketplace" />
-        <SidebarLink href="#" icon={Clapperboard} text="Watch" />
-        <SidebarLink href="#" icon={History} text="Memories" />
-        <SidebarLink href="#" icon={Bookmark} text="Saved" />
+        <SidebarLink href="/friends" icon={Users} text="Friends" />
+        <SidebarLink href="/groups" icon={UserSquare2} text="Groups" />
+        <SidebarLink href="/marketplace" icon={Store} text="Marketplace" />
+        <SidebarLink href="/watch" icon={Clapperboard} text="Watch" />
+        <SidebarLink href="/memories" icon={History} text="Memories" />
+        <SidebarLink href="/saved" icon={Bookmark} text="Saved" />
       </div>
     </aside>
   );
