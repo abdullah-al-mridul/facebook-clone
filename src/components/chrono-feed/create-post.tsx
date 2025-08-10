@@ -29,7 +29,7 @@ export default function CreatePost({ onOpenDialog }: CreatePostProps) {
         </div>
         <Separator className="my-3" />
         <div className="flex justify-around">
-            <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground font-semibold" onClick={onOpenDialog}>
+            <Button variant="ghost" className="hidden sm:flex flex-1 gap-2 text-muted-foreground font-semibold" onClick={onOpenDialog}>
                 <Video className="h-6 w-6 text-red-500" />
                 Live video
             </Button>
