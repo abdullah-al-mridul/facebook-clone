@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Bell, Home, MessageCircle, Search, Store, Users, Clapperboard, Menu } from 'lucide-react';
+import { Bell, Home, MessageCircle, Store, Users, Clapperboard, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -38,7 +38,7 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
       <div className="flex items-center gap-2">
          <Sheet>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full bg-accent hover:bg-accent/80 lg:hidden">
+                <Button variant="ghost" size="icon" className="lg:hidden">
                     <Menu />
                 </Button>
             </SheetTrigger>
@@ -46,8 +46,9 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
                 <LeftSidebar />
             </SheetContent>
         </Sheet>
-        <Link href="/">
-          <span className="text-2xl font-bold text-primary">Facemusk</span>
+        <Link href="/" className="text-2xl font-bold text-primary">
+          <span className="hidden sm:inline">Facemusk</span>
+          <span className="sm:hidden">F</span>
         </Link>
       </div>
       
@@ -59,9 +60,6 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
       </nav>
 
       <div className="flex items-center gap-1 sm:gap-2">
-        <Button variant="ghost" size="icon" className="rounded-full bg-accent hover:bg-accent/80 md:hidden">
-            <Search />
-        </Button>
         <Button variant="ghost" size="icon" className="rounded-full bg-accent hover:bg-accent/80" onClick={onMessagesClick}>
           <MessageCircle />
         </Button>
