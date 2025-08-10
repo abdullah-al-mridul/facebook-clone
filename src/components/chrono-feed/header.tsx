@@ -24,10 +24,11 @@ const NavLink = ({ href, icon: Icon, active = false }: { href: string, icon: Rea
 
 type HeaderProps = {
   onMessagesClick: () => void;
+  onNotificationsClick: () => void;
 };
 
 
-export default function Header({ onMessagesClick }: HeaderProps) {
+export default function Header({ onMessagesClick, onNotificationsClick }: HeaderProps) {
   return (
     <header className="fixed top-0 left-0 right-0 h-14 bg-card border-b z-50 flex items-center justify-between px-4">
       <div className="flex items-center gap-2">
@@ -54,7 +55,7 @@ export default function Header({ onMessagesClick }: HeaderProps) {
         <Button variant="ghost" size="icon" className="rounded-full bg-accent hover:bg-accent/80" onClick={onMessagesClick}>
           <MessageCircle />
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full bg-accent hover:bg-accent/80">
+        <Button variant="ghost" size="icon" className="rounded-full bg-accent hover:bg-accent/80" onClick={onNotificationsClick}>
           <Bell />
         </Button>
         <DropdownMenu>

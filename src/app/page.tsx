@@ -9,6 +9,7 @@ import Chatbox from '@/components/chrono-feed/chatbox';
 import { useState } from 'react';
 import { User } from '@/types';
 import MinimizedChat from '@/components/chrono-feed/minimized-chat';
+import NotificationDrawer from '@/components/chrono-feed/notification-drawer';
 
 type ChatWindowState = {
   user: User;
@@ -17,6 +18,7 @@ type ChatWindowState = {
 
 export default function Home() {
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
+  const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] = useState(false);
   const [openChats, setOpenChats] = useState<ChatWindowState[]>([]);
 
   const handleUserSelect = (user: User) => {
@@ -25,7 +27,6 @@ export default function Home() {
     const existingChat = openChats.find(chat => chat.user.name === user.name);
 
     if (existingChat) {
-      // If chat exists and is minimized, expand it
       if (existingChat.isMinimized) {
         setOpenChats(prevChats =>
           prevChats.map(chat =>
@@ -34,7 +35,6 @@ export default function Home() {
         );
       }
     } else {
-      // If chat doesn't exist, add it
        if (openChats.length < 3) {
         setOpenChats(prevChats => [...prevChats, { user, isMinimized: false }]);
        }
@@ -61,11 +61,16 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <Header 
         onMessagesClick={() => setIsMessageDrawerOpen(true)}
+        onNotificationsClick={() => setIsNotificationDrawerOpen(true)}
       />
        <MessageDrawer 
         isOpen={isMessageDrawerOpen} 
         onOpenChange={setIsMessageDrawerOpen}
         onUserSelect={handleUserSelect}
+      />
+      <NotificationDrawer
+        isOpen={isNotificationDrawerOpen}
+        onOpenChange={setIsNotificationDrawerOpen}
       />
       <div className="flex">
         <LeftSidebar />
