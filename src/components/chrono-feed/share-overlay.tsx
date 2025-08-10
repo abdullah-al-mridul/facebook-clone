@@ -26,7 +26,7 @@ export default function ShareOverlay({ post, isOpen, onOpenChange }: ShareOverla
   const { toast } = useToast();
   if (!post) return null;
 
-  const postUrl = typeof window !== 'undefined' ? `${window.location.origin}/post/${post.id}`: '';
+  const postUrl = `https://facemusk.com/post/${post.id}`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(postUrl);
@@ -68,4 +68,5 @@ export default function ShareOverlay({ post, isOpen, onOpenChange }: ShareOverla
     </Dialog>
   );
 }
+
 
