@@ -42,7 +42,7 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
       </div>
       
       <nav className="absolute left-1/2 -translate-x-1/2 h-full hidden lg:flex items-center">
-        <NavLink href="#" icon={Home} active />
+        <NavLink href="/" icon={Home} active={typeof window !== 'undefined' && window.location.pathname === '/'} />
         <NavLink href="#" icon={Users} />
         <NavLink href="#" icon={Clapperboard} />
         <NavLink href="#" icon={Store} />
@@ -68,7 +68,9 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <Link href="/profile">
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+            </Link>
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Log out</DropdownMenuItem>

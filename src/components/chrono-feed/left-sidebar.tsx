@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Users, UserSquare2, Bookmark, Clapperboard, History, Store } from 'lucide-react';
@@ -13,7 +14,7 @@ export default function LeftSidebar() {
   return (
     <aside className="fixed top-14 left-0 h-screen w-72 p-4 hidden lg:block overflow-y-auto">
       <div className="flex flex-col gap-2">
-        <Link href="#" className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
+        <Link href="/profile" className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
           <Avatar className="h-9 w-9">
             <AvatarImage src="https://placehold.co/40x40.png" alt="User" data-ai-hint="profile person" />
             <AvatarFallback>U</AvatarFallback>
