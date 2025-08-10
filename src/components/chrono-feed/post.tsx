@@ -83,39 +83,43 @@ export default function Post({ post, isOverlay = false }: PostProps) {
         </div>
       </div>
 
-      <Separator className="mx-4 w-auto" />
+      {!isOverlay && (
+        <>
+        <Separator className="mx-4 w-auto" />
 
-      <CardFooter className="p-1">
-        <div className="flex justify-around w-full">
-          <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-            <PopoverTrigger asChild>
-              <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground font-semibold">
-                <ThumbsUp />
-                {reaction}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto bg-card p-2 rounded-full">
-              <div className="flex gap-2">
-                <Reaction><span onClick={() => handleReaction('👍 Like')}>👍</span></Reaction>
-                <Reaction><span onClick={() => handleReaction('❤️ Love')}>❤️</span></Reaction>
-                <Reaction><span onClick={() => handleReaction('😂 Haha')}>😂</span></Reaction>
-                <Reaction><span onClick={() => handleReaction('😮 Wow')}>😮</span></Reaction>
-                <Reaction><span onClick={() => handleReaction('😢 Sad')}>😢</span></Reaction>
-                <Reaction><span onClick={() => handleReaction('😡 Angry')}>😡</span></Reaction>
-              </div>
-            </PopoverContent>
-          </Popover>
+        <CardFooter className="p-1">
+          <div className="flex justify-around w-full">
+            <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground font-semibold">
+                  <ThumbsUp />
+                  {reaction}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto bg-card p-2 rounded-full">
+                <div className="flex gap-2">
+                  <Reaction><span onClick={() => handleReaction('👍 Like')}>👍</span></Reaction>
+                  <Reaction><span onClick={() => handleReaction('❤️ Love')}>❤️</span></Reaction>
+                  <Reaction><span onClick={() => handleReaction('😂 Haha')}>😂</span></Reaction>
+                  <Reaction><span onClick={() => handleReaction('😮 Wow')}>😮</span></Reaction>
+                  <Reaction><span onClick={() => handleReaction('😢 Sad')}>😢</span></Reaction>
+                  <Reaction><span onClick={() => handleReaction('😡 Angry')}>😡</span></Reaction>
+                </div>
+              </PopoverContent>
+            </Popover>
 
-          <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground font-semibold" onClick={() => setIsCommentOverlayOpen(true)}>
-            <MessageSquare />
-            Comment
-          </Button>
-          <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground font-semibold">
-            <Share2 />
-            Share
-          </Button>
-        </div>
-      </CardFooter>
+            <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground font-semibold" onClick={() => setIsCommentOverlayOpen(true)}>
+              <MessageSquare />
+              Comment
+            </Button>
+            <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground font-semibold">
+              <Share2 />
+              Share
+            </Button>
+          </div>
+        </CardFooter>
+        </>
+      )}
     </PostWrapper>
     {!isOverlay && <CommentOverlay post={post} isOpen={isCommentOverlayOpen} onOpenChange={setIsCommentOverlayOpen} />}
     </>
