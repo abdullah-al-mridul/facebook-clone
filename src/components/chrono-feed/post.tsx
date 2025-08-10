@@ -10,6 +10,7 @@ import { MessageSquare, MoreHorizontal, Share2, ThumbsUp } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useState } from 'react';
 import CommentOverlay from './comment-overlay';
+import ShareOverlay from './share-overlay';
 
 type PostProps = {
   post: PostType;
@@ -24,6 +25,7 @@ export default function Post({ post, isOverlay = false }: PostProps) {
   const [reaction, setReaction] = useState('Like');
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [isCommentOverlayOpen, setIsCommentOverlayOpen] = useState(false);
+  const [isShareOverlayOpen, setIsShareOverlayOpen] = useState(false);
 
   const handleReaction = (newReaction: string) => {
     setReaction(newReaction);
@@ -112,7 +114,7 @@ export default function Post({ post, isOverlay = false }: PostProps) {
               <MessageSquare />
               Comment
             </Button>
-            <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground font-semibold">
+            <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground font-semibold" onClick={() => setIsShareOverlayOpen(true)}>
               <Share2 />
               Share
             </Button>
@@ -122,6 +124,7 @@ export default function Post({ post, isOverlay = false }: PostProps) {
       )}
     </PostWrapper>
     {!isOverlay && <CommentOverlay post={post} isOpen={isCommentOverlayOpen} onOpenChange={setIsCommentOverlayOpen} />}
+    {!isOverlay && <ShareOverlay post={post} isOpen={isShareOverlayOpen} onOpenChange={setIsShareOverlayOpen} />}
     </>
   );
 }
