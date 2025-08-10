@@ -2,6 +2,7 @@
 "use client";
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Bell, Home, MessageCircle, Search, Store, Users, Clapperboard, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,6 +30,8 @@ type HeaderProps = {
 
 
 export default function Header({ onMessagesClick, onNotificationsClick }: HeaderProps) {
+  const pathname = usePathname();
+  
   return (
     <header className="fixed top-0 left-0 right-0 h-14 bg-card border-b z-50 flex items-center justify-between px-4">
       <div className="flex items-center gap-2">
@@ -42,7 +45,7 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
       </div>
       
       <nav className="absolute left-1/2 -translate-x-1/2 h-full hidden lg:flex items-center">
-        <NavLink href="/" icon={Home} active={typeof window !== 'undefined' && window.location.pathname === '/'} />
+        <NavLink href="/" icon={Home} active={pathname === '/'} />
         <NavLink href="#" icon={Users} />
         <NavLink href="#" icon={Clapperboard} />
         <NavLink href="#" icon={Store} />
