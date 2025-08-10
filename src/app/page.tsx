@@ -60,8 +60,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <Header 
-        onMessagesClick={() => setIsMessageDrawerOpen(true)}
-        onNotificationsClick={() => setIsNotificationDrawerOpen(true)}
+        onMessagesClick={() => setIsMessageDrawerOpen(!isMessageDrawerOpen)}
+        onNotificationsClick={() => setIsNotificationDrawerOpen(!isNotificationDrawerOpen)}
       />
        <MessageDrawer 
         isOpen={isMessageDrawerOpen} 
@@ -80,7 +80,7 @@ export default function Home() {
           </div>
         </main>
       </div>
-      <div className="fixed bottom-0 right-0 sm:right-4 flex items-end gap-4 z-40">
+      <div className="fixed bottom-0 right-4 flex items-end gap-4 z-40">
         {minimizedChats.map((chat) => (
             <MinimizedChat 
               key={chat.user.name} 
