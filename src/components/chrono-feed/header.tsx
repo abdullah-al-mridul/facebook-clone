@@ -13,6 +13,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useState } from 'react';
+import MessageDrawer from './message-drawer';
 
 
 const NavLink = ({ href, icon: Icon, active = false }: { href: string, icon: React.ElementType, active?: boolean }) => (
@@ -24,6 +26,8 @@ const NavLink = ({ href, icon: Icon, active = false }: { href: string, icon: Rea
 
 
 export default function Header() {
+  const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
+
   return (
     <header className="fixed top-0 left-0 right-0 h-14 bg-card border-b z-50 flex items-center justify-between px-4">
       <div className="flex items-center gap-2">
@@ -47,7 +51,7 @@ export default function Header() {
         <Button variant="ghost" size="icon" className="rounded-full bg-accent hover:bg-accent/80">
           <Menu />
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full bg-accent hover:bg-accent/80">
+        <Button variant="ghost" size="icon" className="rounded-full bg-accent hover:bg-accent/80" onClick={() => setIsMessageDrawerOpen(true)}>
           <MessageCircle />
         </Button>
         <Button variant="ghost" size="icon" className="rounded-full bg-accent hover:bg-accent/80">
@@ -70,6 +74,7 @@ export default function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      <MessageDrawer isOpen={isMessageDrawerOpen} onOpenChange={setIsMessageDrawerOpen} />
     </header>
   );
 }
