@@ -8,20 +8,49 @@ import MessageDrawer from '@/components/chrono-feed/message-drawer';
 import Chatbox from '@/components/chrono-feed/chatbox';
 import { useState } from 'react';
 import { User } from '@/types';
+import MinimizedChat from '@/components/chrono-feed/minimized-chat';
+
+type ChatWindowState = {
+  user: User;
+  isMinimized: boolean;
+};
 
 export default function Home() {
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
-  const [openChats, setOpenChats] = useState<User[]>([]);
+  const [openChats, setOpenChats] = useState<ChatWindowState[]>([]);
 
   const handleUserSelect = (user: User) => {
     setIsMessageDrawerOpen(false);
-    if (!openChats.find(chat => chat.name === user.name)) {
-      setOpenChats(prevChats => [...prevChats, user]);
+
+    const existingChat = openChats.find(chat => chat.user.name === user.name);
+
+    if (existingChat) {
+      // If chat exists and is minimized, expand it
+      if (existingChat.isMinimized) {
+        setOpenChats(prevChats =>
+          prevChats.map(chat =>
+            chat.user.name === user.name ? { ...chat, isMinimized: false } : chat
+          )
+        );
+      }
+    } else {
+      // If chat doesn't exist, add it
+       if (openChats.length < 3) {
+        setOpenChats(prevChats => [...prevChats, { user, isMinimized: false }]);
+       }
     }
   };
 
   const closeChat = (userName: string) => {
-    setOpenChats(prevChats => prevChats.filter(chat => chat.name !== userName));
+    setOpenChats(prevChats => prevChats.filter(chat => chat.user.name !== userName));
+  };
+
+  const toggleMinimize = (userName: string) => {
+    setOpenChats(prevChats =>
+      prevChats.map(chat =>
+        chat.user.name === userName ? { ...chat, isMinimized: !chat.isMinimized } : chat
+      )
+    );
   };
 
 
@@ -44,13 +73,23 @@ export default function Home() {
         </main>
       </div>
       <div className="fixed bottom-0 right-4 flex items-end gap-4">
-        {openChats.map((user, index) => (
-          <Chatbox 
-            key={user.name} 
-            user={user} 
-            onClose={() => closeChat(user.name)} 
-          />
-        ))}
+        {openChats.map((chat) => 
+          chat.isMinimized ? (
+            <MinimizedChat 
+              key={chat.user.name} 
+              user={chat.user} 
+              onClose={() => closeChat(chat.user.name)}
+              onExpand={() => toggleMinimize(chat.user.name)}
+              />
+          ) : (
+            <Chatbox 
+              key={chat.user.name} 
+              user={chat.user} 
+              onClose={() => closeChat(chat.user.name)} 
+              onMinimize={() => toggleMinimize(chat.user.name)}
+            />
+          )
+        )}
       </div>
     </div>
   );

@@ -12,13 +12,14 @@ import { Minus, Send, X } from "lucide-react";
 type ChatboxProps = {
   user: User;
   onClose: () => void;
+  onMinimize: () => void;
 };
 
-export default function Chatbox({ user, onClose }: ChatboxProps) {
+export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
   return (
     <Card className="w-80 h-[450px] flex flex-col shadow-2xl">
       <CardHeader className="p-2 flex flex-row items-center justify-between border-b bg-card rounded-t-lg">
-        <div className="flex items-center gap-2 cursor-pointer">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={onMinimize}>
             <Avatar className="h-8 w-8">
               <AvatarImage src={user.avatarUrl} alt={user.name} data-ai-hint="person portrait"/>
               <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
@@ -26,7 +27,7 @@ export default function Chatbox({ user, onClose }: ChatboxProps) {
             <p className="font-semibold">{user.name}</p>
         </div>
         <div className="flex items-center">
-            <Button variant="ghost" size="icon" className="h-8 w-8"><Minus/></Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onMinimize}><Minus/></Button>
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onClose}><X/></Button>
         </div>
       </CardHeader>
