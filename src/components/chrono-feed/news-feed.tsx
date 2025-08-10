@@ -17,6 +17,10 @@ const samplePosts: PostType[] = [
     likes: 128,
     comments: 16,
     shares: 8,
+    commentData: [
+        { id: 'c1', user: { name: 'John Smith', avatarUrl: 'https://placehold.co/40x40/9CA3AF/FFFFFF.png' }, timestamp: '1h ago', content: 'Looks amazing! I wish I was there.' },
+        { id: 'c2', user: { name: 'Alice Johnson', avatarUrl: 'https://placehold.co/40x40/F3F4F6/1F2937.png' }, timestamp: '30m ago', content: 'So jealous! Enjoy the weather!' }
+    ]
   },
   {
     id: '2',
@@ -37,6 +41,9 @@ const samplePosts: PostType[] = [
     likes: 95,
     comments: 23,
     shares: 5,
+    commentData: [
+        { id: 'c3', user: { name: 'Jane Doe', avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' }, timestamp: '1d ago', content: 'That looks so yummy! You have to share the recipe!' }
+    ]
   },
 ];
 
