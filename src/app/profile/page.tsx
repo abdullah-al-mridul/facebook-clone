@@ -10,6 +10,8 @@ import MessageDrawer from '@/components/chrono-feed/message-drawer';
 import NotificationDrawer from '@/components/chrono-feed/notification-drawer';
 import { User } from '@/types';
 import ProfileAbout from '@/components/chrono-feed/profile-about';
+import Chatbox from '@/components/chrono-feed/chatbox';
+import MinimizedChat from '@/components/chrono-feed/minimized-chat';
 
 type ChatWindowState = {
   user: User;
@@ -41,6 +43,21 @@ export default function ProfilePage() {
        }
     }
   };
+  
+  const closeChat = (userName: string) => {
+    setOpenChats(prevChats => prevChats.filter(chat => chat.user.name !== userName));
+  };
+
+  const toggleMinimize = (userName: string) => {
+    setOpenChats(prevChats =>
+      prevChats.map(chat =>
+        chat.user.name === userName ? { ...chat, isMinimized: !chat.isMinimized } : chat
+      )
+    );
+  };
+
+  const minimizedChats = openChats.filter(chat => chat.isMinimized);
+  const expandedChats = openChats.filter(chat => !chat.isMinimized);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -74,7 +91,9 @@ export default function ProfilePage() {
         onOpenChange={setIsNotificationDrawerOpen}
       />
       <div className="flex">
-        <LeftSidebar />
+        <div className="fixed top-14 left-0 h-[calc(100vh-56px)] w-72 hidden lg:block">
+          <LeftSidebar />
+        </div>
         <main className="flex-1 lg:pl-72 pt-14">
           <div className="w-full max-w-5xl mx-auto">
             <ProfileHeader activeTab={activeTab} onTabChange={setActiveTab}/>
@@ -83,6 +102,24 @@ export default function ProfilePage() {
             </div>
           </div>
         </main>
+      </div>
+       <div className="fixed bottom-0 right-4 flex items-end gap-4">
+        {minimizedChats.map((chat) => (
+            <MinimizedChat 
+              key={chat.user.name} 
+              user={chat.user} 
+              onClose={() => closeChat(chat.user.name)}
+              onExpand={() => toggleMinimize(chat.user.name)}
+              />
+        ))}
+        {expandedChats.map((chat) => (
+            <Chatbox 
+              key={chat.user.name} 
+              user={chat.user} 
+              onClose={() => closeChat(chat.user.name)} 
+              onMinimize={() => toggleMinimize(chat.user.name)}
+            />
+        ))}
       </div>
     </div>
   );
