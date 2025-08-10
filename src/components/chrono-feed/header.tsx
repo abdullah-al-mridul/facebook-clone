@@ -42,7 +42,7 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
                     <Menu />
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="p-0 w-72">
+            <SheetContent side="left" className="p-0 w-72 lg:hidden">
                 <LeftSidebar />
             </SheetContent>
         </Sheet>
