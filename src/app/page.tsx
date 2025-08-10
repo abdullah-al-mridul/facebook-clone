@@ -76,7 +76,6 @@ export default function Home() {
         </main>
       </div>
       <div className="fixed bottom-0 right-4 flex items-end gap-4">
-         {/* Minimized chats on the left of expanded ones */}
         {minimizedChats.map((chat) => (
             <MinimizedChat 
               key={chat.user.name} 
@@ -85,17 +84,14 @@ export default function Home() {
               onExpand={() => toggleMinimize(chat.user.name)}
               />
         ))}
-         {/* Vertical stack of expanded chats */}
-        <div className="flex flex-col gap-4">
-            {expandedChats.map((chat) => (
-                <Chatbox 
-                  key={chat.user.name} 
-                  user={chat.user} 
-                  onClose={() => closeChat(chat.user.name)} 
-                  onMinimize={() => toggleMinimize(chat.user.name)}
-                />
-            ))}
-        </div>
+        {expandedChats.map((chat) => (
+            <Chatbox 
+              key={chat.user.name} 
+              user={chat.user} 
+              onClose={() => closeChat(chat.user.name)} 
+              onMinimize={() => toggleMinimize(chat.user.name)}
+            />
+        ))}
       </div>
     </div>
   );
