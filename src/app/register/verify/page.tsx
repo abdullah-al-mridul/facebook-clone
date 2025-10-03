@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import Link from 'next/link';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 
 const formSchema = z.object({
   otp: z.string().min(6, { message: 'Your code must be 6 characters.' }),
@@ -62,9 +63,18 @@ export default function VerifyPage() {
                 control={form.control}
                 name="otp"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className='flex flex-col items-center'>
                     <FormControl>
-                      <Input placeholder="Confirmation code" {...field} className="py-6 text-base text-center" />
+                      <InputOTP maxLength={6} {...field}>
+                        <InputOTPGroup>
+                          <InputOTPSlot index={0} />
+                          <InputOTPSlot index={1} />
+                          <InputOTPSlot index={2} />
+                          <InputOTPSlot index={3} />
+                          <InputOTPSlot index={4} />
+                          <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                      </InputOTP>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
