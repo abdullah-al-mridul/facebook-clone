@@ -2,9 +2,9 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { Check, UserPlus, Camera } from "lucide-react";
+import { Check, UserPlus, Camera, X } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 type GroupHeaderProps = {
     group: {
@@ -18,14 +18,20 @@ type GroupHeaderProps = {
 
 export default function GroupHeader({ group, onInviteClick }: GroupHeaderProps) {
   const [coverImage, setCoverImage] = useState(group.coverUrl);
+  const [newImagePreview, setNewImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setCoverImage(group.coverUrl);
+    setNewImagePreview(null);
+  }, [group.coverUrl]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setCoverImage(reader.result as string);
+        setNewImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -35,23 +41,50 @@ export default function GroupHeader({ group, onInviteClick }: GroupHeaderProps) 
     fileInputRef.current?.click();
   }
 
+  const handleSave = () => {
+    if (newImagePreview) {
+        setCoverImage(newImagePreview);
+    }
+    setNewImagePreview(null);
+  }
+
+  const handleDiscard = () => {
+    setNewImagePreview(null);
+    if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+    }
+  }
+
   return (
     <div className="bg-card shadow-sm">
       <input type="file" ref={fileInputRef} onChange={handleImageChange} accept="image/*" className="hidden" />
       <div className="relative h-64 md:h-80 w-full group">
         <Image 
-            src={coverImage}
+            src={newImagePreview || coverImage}
             alt="Cover photo"
             fill
             objectFit="cover"
             className="rounded-t-lg"
             data-ai-hint={group.coverHint}
         />
-        <div className="absolute bottom-4 right-4">
-            <Button onClick={handleEditClick}>
-                <Camera className="mr-2 h-4 w-4" />
-                Edit cover photo
-            </Button>
+        <div className="absolute bottom-4 right-4 flex gap-2">
+            {newImagePreview ? (
+                <>
+                    <Button variant="secondary" onClick={handleDiscard}>
+                        <X className="mr-2 h-4 w-4" />
+                        Discard
+                    </Button>
+                    <Button onClick={handleSave}>
+                        <Check className="mr-2 h-4 w-4" />
+                        Save
+                    </Button>
+                </>
+            ) : (
+                <Button onClick={handleEditClick}>
+                    <Camera className="mr-2 h-4 w-4" />
+                    Edit cover photo
+                </Button>
+            )}
         </div>
       </div>
       <div className="p-4">
