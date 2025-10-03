@@ -15,12 +15,17 @@ import {
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
   otp: z.string().min(6, { message: 'Your code must be 6 characters.' }),
 });
 
 export default function VerifyPage() {
+  const [showResend, setShowResend] = useState(false);
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,6 +36,14 @@ export default function VerifyPage() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     // Handle OTP verification logic here
+  }
+
+  const handleResendCode = () => {
+    // Logic to resend code would go here
+    toast({
+        title: "Code resent!",
+        description: "A new confirmation code has been sent to your email.",
+    })
   }
 
   return (
@@ -58,9 +71,17 @@ export default function VerifyPage() {
                 )}
               />
               <div className="flex items-center justify-between">
-                <Link href="#" className="text-sm text-primary hover:underline">
-                    Didn't get a code?
-                </Link>
+                <div>
+                {showResend ? (
+                    <Button variant="link" type="button" onClick={handleResendCode} className="p-0 text-primary hover:underline">
+                        Resend code
+                    </Button>
+                ) : (
+                    <Link href="#" onClick={(e) => { e.preventDefault(); setShowResend(true); }} className="text-sm text-primary hover:underline">
+                        Didn't get a code?
+                    </Link>
+                )}
+                </div>
                 <Button type="submit">
                   Continue
                 </Button>
