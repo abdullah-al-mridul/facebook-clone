@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import Link from 'next/link';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   firstName: z.string().min(1, { message: "First name is required." }),
@@ -38,6 +39,7 @@ const months = [
 ];
 
 export default function RegisterPage() {
+    const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,6 +57,8 @@ export default function RegisterPage() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     // Handle registration logic here
+    // On success, redirect to verification page
+    router.push('/register/verify');
   }
 
   return (
