@@ -9,10 +9,11 @@ type GroupHeaderProps = {
         members: string;
         coverUrl: string;
         coverHint: string;
-    }
+    },
+    onInviteClick: () => void;
 };
 
-export default function GroupHeader({ group }: GroupHeaderProps) {
+export default function GroupHeader({ group, onInviteClick }: GroupHeaderProps) {
   return (
     <div className="bg-card shadow-sm">
       <div className="relative h-64 md:h-80 w-full">
@@ -36,7 +37,7 @@ export default function GroupHeader({ group }: GroupHeaderProps) {
                     <Check className="mr-2 h-4 w-4" />
                     Joined
                 </Button>
-                 <Button variant="secondary" className="ml-2">
+                 <Button variant="secondary" className="ml-2" onClick={onInviteClick}>
                     <UserPlus className="mr-2 h-4 w-4" />
                     Invite
                 </Button>

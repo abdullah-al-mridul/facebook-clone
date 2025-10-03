@@ -11,6 +11,7 @@ import MinimizedChat from '@/components/chrono-feed/minimized-chat';
 import NewsFeed from '@/components/chrono-feed/news-feed';
 import GroupHeader from '@/components/chrono-feed/group-header';
 import { User } from '@/types';
+import InviteFriendsDialog from '@/components/chrono-feed/invite-friends-dialog';
 
 type ChatWindowState = {
   user: User;
@@ -21,6 +22,7 @@ type ChatWindowState = {
 export default function GroupPage({ params }: { params: { groupId: string } }) {
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
   const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] = useState(false);
+  const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
   const [openChats, setOpenChats] = useState<ChatWindowState[]>([]);
   
   const handleUserSelect = (user: User) => {
@@ -78,13 +80,15 @@ export default function GroupPage({ params }: { params: { groupId: string } }) {
         isOpen={isNotificationDrawerOpen}
         onOpenChange={setIsNotificationDrawerOpen}
       />
+      <InviteFriendsDialog isOpen={isInviteDialogOpen} onOpenChange={setIsInviteDialogOpen} />
+
       <div className="flex">
         <div className="fixed top-14 left-0 h-[calc(100vh-56px)] w-72 hidden lg:block">
           <LeftSidebar />
         </div>
         <main className="flex-1 lg:pl-72 pt-14">
           <div className="w-full max-w-5xl mx-auto">
-            <GroupHeader group={groupData} />
+            <GroupHeader group={groupData} onInviteClick={() => setIsInviteDialogOpen(true)} />
             <div className="p-4 sm:p-6 lg:p-8 w-full max-w-2xl mx-auto">
                 <NewsFeed />
             </div>
