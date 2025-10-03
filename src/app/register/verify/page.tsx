@@ -12,19 +12,22 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
+import { cn } from '@/lib/utils';
 
 const formSchema = z.object({
   otp: z.string().min(6, { message: 'Your code must be 6 characters.' }),
 });
 
+const CORRECT_OTP = "123456";
+
 export default function VerifyPage() {
   const [showResend, setShowResend] = useState(false);
+  const [isOtpCorrect, setIsOtpCorrect] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -36,7 +39,13 @@ export default function VerifyPage() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    // Handle OTP verification logic here
+    if (values.otp === CORRECT_OTP) {
+        setIsOtpCorrect(true);
+        setTimeout(() => setIsOtpCorrect(false), 600); // Reset after animation
+        // Handle successful OTP verification logic here
+    } else {
+        form.setError("otp", { type: "manual", message: "Incorrect OTP code."})
+    }
   }
 
   const handleResendCode = () => {
@@ -65,8 +74,26 @@ export default function VerifyPage() {
                 render={({ field }) => (
                   <FormItem className='flex flex-col items-center'>
                     <FormControl>
-                      <InputOTP maxLength={6} {...field}>
-                        <InputOTPGroup>
+                      <InputOTP 
+                        maxLength={6} 
+                        {...field}
+                        containerClassName={cn(isOtpCorrect && "shake border-green-500")}
+                        onChange={(value) => {
+                            field.onChange(value);
+                            if (value.length === 6) {
+                                if (value === CORRECT_OTP) {
+                                    setIsOtpCorrect(true);
+                                    setTimeout(() => setIsOtpCorrect(false), 600);
+                                    form.clearErrors("otp");
+                                } else {
+                                    form.setError("otp", { type: "manual", message: "Incorrect OTP code."})
+                                }
+                            } else {
+                                form.clearErrors("otp");
+                            }
+                        }}
+                      >
+                        <InputOTPGroup className={cn(isOtpCorrect && "[&>div]:border-green-500")}>
                           <InputOTPSlot index={0} />
                           <InputOTPSlot index={1} />
                           <InputOTPSlot index={2} />
