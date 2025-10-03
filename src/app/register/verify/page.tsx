@@ -28,6 +28,8 @@ const CORRECT_OTP = "123456";
 export default function VerifyPage() {
   const [showResend, setShowResend] = useState(false);
   const [isOtpCorrect, setIsOtpCorrect] = useState(false);
+  const [isOtpIncorrect, setIsOtpIncorrect] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -37,15 +39,25 @@ export default function VerifyPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    if (values.otp === CORRECT_OTP) {
+  const handleVerification = (otp: string) => {
+    setIsLoading(true);
+    setTimeout(() => {
+      if (otp === CORRECT_OTP) {
         setIsOtpCorrect(true);
-        setTimeout(() => setIsOtpCorrect(false), 600); // Reset after animation
+        form.clearErrors("otp");
+        setTimeout(() => setIsOtpCorrect(false), 600);
         // Handle successful OTP verification logic here
-    } else {
-        form.setError("otp", { type: "manual", message: "Incorrect OTP code."})
-    }
+      } else {
+        setIsOtpIncorrect(true);
+        form.setValue("otp", ""); // Clear the input on wrong OTP
+        setTimeout(() => setIsOtpIncorrect(false), 600);
+      }
+      setIsLoading(false);
+    }, 1000);
+  }
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    handleVerification(values.otp);
   }
 
   const handleResendCode = () => {
@@ -77,23 +89,21 @@ export default function VerifyPage() {
                       <InputOTP 
                         maxLength={6} 
                         {...field}
-                        containerClassName={cn(isOtpCorrect && "shake border-green-500")}
+                        containerClassName={cn(
+                            isOtpCorrect && "shake border-green-500",
+                            isOtpIncorrect && "shake"
+                        )}
                         onChange={(value) => {
                             field.onChange(value);
                             if (value.length === 6) {
-                                if (value === CORRECT_OTP) {
-                                    setIsOtpCorrect(true);
-                                    setTimeout(() => setIsOtpCorrect(false), 600);
-                                    form.clearErrors("otp");
-                                } else {
-                                    form.setError("otp", { type: "manual", message: "Incorrect OTP code."})
-                                }
-                            } else {
-                                form.clearErrors("otp");
+                                handleVerification(value);
                             }
                         }}
                       >
-                        <InputOTPGroup className={cn(isOtpCorrect && "[&>div]:border-green-500")}>
+                        <InputOTPGroup className={cn(
+                            isOtpCorrect && "[&>div]:border-green-500",
+                            isOtpIncorrect && "[&>div]:border-destructive"
+                        )}>
                           <InputOTPSlot index={0} />
                           <InputOTPSlot index={1} />
                           <InputOTPSlot index={2} />
@@ -119,8 +129,8 @@ export default function VerifyPage() {
                     </Link>
                 )}
                 </div>
-                <Button type="submit">
-                  Continue
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? 'Verifying...' : 'Continue'}
                 </Button>
               </div>
             </form>
