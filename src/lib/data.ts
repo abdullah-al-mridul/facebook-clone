@@ -25,6 +25,7 @@ export const samplePosts: PostType[] = [
       likes: 256,
       comments: 42,
       shares: 12,
+      commentData: []
     },
     {
       id: '3',

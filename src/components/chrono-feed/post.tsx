@@ -79,7 +79,7 @@ export default function Post({ post, isOverlay = false }: PostProps) {
             <span>{post.likes}</span>
           </div>
           <div className="flex gap-4">
-            <span>{post.comments} comments</span>
+            <span className="cursor-pointer hover:underline" onClick={() => setIsCommentOverlayOpen(true)}>{post.comments} comments</span>
             <span>{post.shares} shares</span>
           </div>
         </div>
