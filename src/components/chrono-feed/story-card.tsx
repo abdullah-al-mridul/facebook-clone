@@ -11,9 +11,10 @@ type StoryCardProps = {
     story?: StoryType;
     isCreate?: boolean;
     onOpenCreate?: () => void;
+    onViewStory?: () => void;
 };
 
-export default function StoryCard({ story, isCreate = false, onOpenCreate }: StoryCardProps) {
+export default function StoryCard({ story, isCreate = false, onOpenCreate, onViewStory }: StoryCardProps) {
   if (isCreate) {
     return (
         <Card className="overflow-hidden h-full flex flex-col group cursor-pointer" onClick={onOpenCreate}>
@@ -33,7 +34,7 @@ export default function StoryCard({ story, isCreate = false, onOpenCreate }: Sto
   if (!story) return null;
 
   return (
-    <Card className="overflow-hidden group cursor-pointer relative h-full">
+    <Card className="overflow-hidden group cursor-pointer relative h-full" onClick={onViewStory}>
         <Image src={story.imageUrl} alt={story.user.name} fill objectFit="cover" className="transition-transform group-hover:scale-105" data-ai-hint={story.imageHint}/>
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
         <div className="absolute top-2 left-2">
