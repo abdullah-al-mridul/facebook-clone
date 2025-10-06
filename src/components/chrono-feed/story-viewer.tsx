@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 import { StoryType } from '@/types';
