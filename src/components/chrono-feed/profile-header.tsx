@@ -7,11 +7,19 @@ import { Camera, Check, Pencil, X } from "lucide-react";
 import Image from "next/image";
 import ProfileTabs from "./profile-tabs";
 import VerifiedBadge from "./verified-badge";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
+import ImageCropDialog from "./image-crop-dialog";
 
 type ProfileHeaderProps = {
     activeTab: string;
     onTabChange: (tab: string) => void;
+};
+
+type CropState = {
+    isOpen: boolean;
+    imageSrc: string | null;
+    aspect: number;
+    onSave: (croppedImage: string) => void;
 };
 
 export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderProps) {
@@ -20,6 +28,13 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
   
   const [newCoverPreview, setNewCoverPreview] = useState<string | null>(null);
   const [newProfilePreview, setNewProfilePreview] = useState<string | null>(null);
+
+  const [cropState, setCropState] = useState<CropState>({
+      isOpen: false,
+      imageSrc: null,
+      aspect: 16/9,
+      onSave: () => {}
+  });
 
   const coverInputRef = useRef<HTMLInputElement>(null);
   const profileInputRef = useRef<HTMLInputElement>(null);
@@ -30,27 +45,22 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
     friendCount: '1.2k'
   }
 
-  const handleCoverChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, aspect: number, onSave: (croppedImage: string) => void) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setNewCoverPreview(reader.result as string);
+        setCropState({
+            isOpen: true,
+            imageSrc: reader.result as string,
+            aspect,
+            onSave,
+        })
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleProfileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewProfilePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleSaveCover = () => {
     if (newCoverPreview) {
@@ -80,10 +90,28 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
     }
   }
 
+  const onCoverSave = (croppedImage: string) => {
+    setNewCoverPreview(croppedImage);
+    setCropState(prev => ({ ...prev, isOpen: false }));
+  }
+
+  const onProfileSave = (croppedImage: string) => {
+    setNewProfilePreview(croppedImage);
+    setCropState(prev => ({ ...prev, isOpen: false }));
+  }
+
   return (
+    <>
+    <ImageCropDialog 
+        isOpen={cropState.isOpen}
+        onOpenChange={(isOpen) => setCropState(prev => ({ ...prev, isOpen }))}
+        imageSrc={cropState.imageSrc}
+        aspect={cropState.aspect}
+        onSave={cropState.onSave}
+    />
     <div className="bg-card shadow-sm">
-      <input type="file" ref={coverInputRef} onChange={handleCoverChange} accept="image/*" className="hidden" />
-      <input type="file" ref={profileInputRef} onChange={handleProfileChange} accept="image/*" className="hidden" />
+      <input type="file" ref={coverInputRef} onChange={(e) => handleFileChange(e, 16/9, onCoverSave)} accept="image/*" className="hidden" />
+      <input type="file" ref={profileInputRef} onChange={(e) => handleFileChange(e, 1, onProfileSave)} accept="image/*" className="hidden" />
 
       <div className="relative h-64 md:h-96 w-full">
         <Image 
@@ -157,5 +185,6 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
       </div>
       <ProfileTabs activeTab={activeTab} onTabChange={onTabChange} />
     </div>
+    </>
   );
 }
