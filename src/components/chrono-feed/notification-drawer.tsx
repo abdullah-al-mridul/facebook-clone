@@ -5,6 +5,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { ThumbsUp, MessageCircle } from 'lucide-react';
 import { User } from '@/types';
+import VerifiedBadge from './verified-badge';
 
 type NotificationType = 'like' | 'comment';
 
@@ -18,9 +19,9 @@ type DummyNotification = {
 }
 
 const dummyNotifications: DummyNotification[] = [
-  { id: '1', type: 'like', user: { name: 'Sarah Miller', avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' }, content: 'liked your photo.', timestamp: '15m', isRead: false },
+  { id: '1', type: 'like', user: { name: 'Sarah Miller', avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png', isVerified: true }, content: 'liked your photo.', timestamp: '15m', isRead: false },
   { id: '2', type: 'comment', user: { name: 'Michael Chen', avatarUrl: 'https://placehold.co/40x40/9CA3AF/FFFFFF.png' }, content: 'commented: "Looks great!"', timestamp: '1h', isRead: false },
-  { id: '3', type: 'like', user: { name: 'Emily Davis', avatarUrl: 'https://placehold.co/40x40/F3F4F6/1F2937.png' }, content: 'liked your post.', timestamp: '3h', isRead: true },
+  { id: '3', type: 'like', user: { name: 'Emily Davis', avatarUrl: 'https://placehold.co/40x40/F3F4F6/1F2937.png', isVerified: true }, content: 'liked your post.', timestamp: '3h', isRead: true },
   { id: '4', type: 'comment', user: { name: 'David Rodriguez', avatarUrl: 'https://placehold.co/40x40.png' }, content: 'also commented on a post.', timestamp: 'yesterday', isRead: true },
   { id: '5', type: 'like', user: { name: 'Jessica White', avatarUrl: 'https://placehold.co/40x40/D1D5DB/374151.png' }, content: 'liked your comment.', timestamp: '2d', isRead: true },
 ];
@@ -45,7 +46,9 @@ const NotificationItem = ({ notification }: { notification: DummyNotification })
         </div>
       <div className="flex-1 overflow-hidden">
         <p className="text-sm">
-            <span className="font-semibold">{notification.user.name}</span> {notification.content}
+            <span className="font-semibold">{notification.user.name}</span>
+            {notification.user.isVerified && <VerifiedBadge inline />}
+            {' '}{notification.content}
         </p>
         <p className={`text-xs ${!notification.isRead ? 'text-primary' : 'text-muted-foreground'}`}>
             {notification.timestamp}

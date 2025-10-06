@@ -6,11 +6,12 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import type { User } from '@/types';
+import VerifiedBadge from './verified-badge';
 
 const dummyUsers: User[] = [
-  { name: 'Sarah Miller', avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' },
+  { name: 'Sarah Miller', avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png', isVerified: true },
   { name: 'Michael Chen', avatarUrl: 'https://placehold.co/40x40/9CA3AF/FFFFFF.png' },
-  { name: 'Emily Davis', avatarUrl: 'https://placehold.co/40x40/F3F4F6/1F2937.png' },
+  { name: 'Emily Davis', avatarUrl: 'https://placehold.co/40x40/F3F4F6/1F2937.png', isVerified: true },
   { name: 'David Rodriguez', avatarUrl: 'https://placehold.co/40x40.png' },
   { name: 'Jessica White', avatarUrl: 'https://placehold.co/40x40/D1D5DB/374151.png' },
 ];
@@ -37,7 +38,10 @@ const MessageItem = ({ message, onUserSelect }: { message: typeof dummyMessages[
         <AvatarFallback>{message.user.name.charAt(0)}</AvatarFallback>
       </Avatar>
       <div className="flex-1 overflow-hidden">
-        <p className="font-semibold truncate">{message.user.name}</p>
+        <div className="flex items-center gap-1">
+            <p className="font-semibold truncate">{message.user.name}</p>
+            {message.user.isVerified && <VerifiedBadge />}
+        </div>
         <p className={`text-sm truncate ${message.unread ? 'text-foreground font-bold' : 'text-muted-foreground'}`}>
             {message.lastMessage}
         </p>

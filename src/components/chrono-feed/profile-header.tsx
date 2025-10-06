@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Camera, Pencil } from "lucide-react";
 import Image from "next/image";
 import ProfileTabs from "./profile-tabs";
+import VerifiedBadge from "./verified-badge";
 
 type ProfileHeaderProps = {
     activeTab: string;
@@ -11,6 +12,13 @@ type ProfileHeaderProps = {
 };
 
 export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderProps) {
+  // Dummy data, assuming current user is verified
+  const currentUser = {
+    name: 'Current User',
+    isVerified: true,
+    friendCount: '1.2k'
+  }
+
   return (
     <div className="bg-card shadow-sm">
       <div className="relative h-64 md:h-96 w-full">
@@ -41,8 +49,11 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
                 </Button>
             </div>
             <div className="flex-1 mt-4 md:mt-0 md:ml-6 text-center md:text-left">
-                <h1 className="text-3xl font-bold">Current User</h1>
-                <p className="text-muted-foreground">1.2k Friends</p>
+                <div className="flex items-center justify-center md:justify-start gap-2">
+                    <h1 className="text-3xl font-bold">{currentUser.name}</h1>
+                    {currentUser.isVerified && <VerifiedBadge size="lg" />}
+                </div>
+                <p className="text-muted-foreground">{currentUser.friendCount} Friends</p>
             </div>
             <div className="mt-4 md:mt-0">
                 <Button>

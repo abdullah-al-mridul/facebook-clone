@@ -11,6 +11,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useState } from 'react';
 import CommentOverlay from './comment-overlay';
 import ShareOverlay from './share-overlay';
+import VerifiedBadge from './verified-badge';
 
 type PostProps = {
   post: PostType;
@@ -45,7 +46,10 @@ export default function Post({ post, isOverlay = false }: PostProps) {
               <AvatarFallback>{post.user.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-semibold">{post.user.name}</p>
+              <div className="flex items-center gap-1">
+                <p className="font-semibold">{post.user.name}</p>
+                {post.user.isVerified && <VerifiedBadge />}
+              </div>
               <p className="text-xs text-muted-foreground">{post.timestamp}</p>
             </div>
           </div>

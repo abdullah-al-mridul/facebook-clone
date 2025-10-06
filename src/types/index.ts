@@ -2,6 +2,7 @@
 export type User = {
   name: string;
   avatarUrl: string;
+  isVerified?: boolean;
 };
 
 export type CommentType = {

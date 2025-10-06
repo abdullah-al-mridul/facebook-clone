@@ -10,6 +10,7 @@ import { User } from "@/types";
 import { Minus, Send, X, Image as ImageIcon } from "lucide-react";
 import { useState, useRef, ChangeEvent } from "react";
 import Image from 'next/image';
+import VerifiedBadge from "./verified-badge";
 
 type ChatboxProps = {
   user: User;
@@ -82,7 +83,10 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
               <AvatarImage src={user.avatarUrl} alt={user.name} data-ai-hint="person portrait"/>
               <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
             </Avatar>
-            <p className="font-semibold">{user.name}</p>
+            <div className="flex items-center gap-1">
+              <p className="font-semibold">{user.name}</p>
+              {user.isVerified && <VerifiedBadge />}
+            </div>
         </div>
         <div className="flex items-center">
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onMinimize}><Minus/></Button>
