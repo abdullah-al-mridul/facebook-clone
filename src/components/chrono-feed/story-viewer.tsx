@@ -2,14 +2,13 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 import { StoryType } from '@/types';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import VerifiedBadge from './verified-badge';
 import Link from 'next/link';
-import { Progress } from '../ui/progress';
 
 type StoryViewerProps = {
   stories: StoryType[];
@@ -29,6 +28,7 @@ export default function StoryViewer({ stories, startIndex, onClose }: StoryViewe
   return (
     <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="bg-black border-none p-0 max-w-md w-full h-full sm:h-auto sm:max-h-[95vh] sm:rounded-lg flex items-center justify-center">
+       <DialogTitle className="sr-only">Story Viewer</DialogTitle>
         <Carousel setApi={setApi} className="w-full h-full">
           <CarouselContent className="h-full">
             {stories.map((story, index) => (
