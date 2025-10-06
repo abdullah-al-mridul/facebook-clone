@@ -6,12 +6,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { MessageSquare, MoreHorizontal, Share2, ThumbsUp } from 'lucide-react';
+import { MessageSquare, MoreHorizontal, Share2, ThumbsUp, Eye } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useState } from 'react';
 import CommentOverlay from './comment-overlay';
 import ShareOverlay from './share-overlay';
 import VerifiedBadge from './verified-badge';
+import Link from 'next/link';
 
 type PostProps = {
   post: PostType;
@@ -41,22 +42,33 @@ export default function Post({ post, isOverlay = false }: PostProps) {
       <CardHeader className="p-4">
         <div className="flex justify-between">
           <div className="flex items-center gap-3">
-            <Avatar>
-              <AvatarImage src={post.user.avatarUrl} alt={post.user.name} data-ai-hint="person portrait" />
-              <AvatarFallback>{post.user.name.charAt(0)}</AvatarFallback>
-            </Avatar>
+            <Link href="/profile">
+              <Avatar>
+                <AvatarImage src={post.user.avatarUrl} alt={post.user.name} data-ai-hint="person portrait" />
+                <AvatarFallback>{post.user.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+            </Link>
             <div>
               <div className="flex items-center gap-1">
-                <p className="font-semibold">{post.user.name}</p>
+                <Link href="/profile">
+                    <p className="font-semibold hover:underline">{post.user.name}</p>
+                </Link>
                 {post.user.isVerified && <VerifiedBadge />}
               </div>
               <p className="text-xs text-muted-foreground">{post.timestamp}</p>
             </div>
           </div>
           {!isOverlay && (
-            <Button variant="ghost" size="icon">
-                <MoreHorizontal />
-            </Button>
+            <div className="flex items-center">
+                <Link href={`/post/${post.id}`}>
+                    <Button variant="ghost" size="icon" title="View Post">
+                        <Eye />
+                    </Button>
+                </Link>
+                <Button variant="ghost" size="icon">
+                    <MoreHorizontal />
+                </Button>
+            </div>
           )}
         </div>
       </CardHeader>

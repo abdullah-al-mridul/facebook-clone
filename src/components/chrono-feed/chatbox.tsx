@@ -11,6 +11,7 @@ import { Minus, Send, X, Image as ImageIcon } from "lucide-react";
 import { useState, useRef, ChangeEvent } from "react";
 import Image from 'next/image';
 import VerifiedBadge from "./verified-badge";
+import Link from "next/link";
 
 type ChatboxProps = {
   user: User;
@@ -79,12 +80,16 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
     <Card className="w-full sm:w-80 h-[450px] flex flex-col shadow-2xl rounded-t-lg sm:rounded-lg">
       <CardHeader className="p-2 flex flex-row items-center justify-between border-b bg-card rounded-t-lg">
         <div className="flex items-center gap-2 cursor-pointer" onClick={onMinimize}>
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={user.avatarUrl} alt={user.name} data-ai-hint="person portrait"/>
-              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-            </Avatar>
+            <Link href="/profile">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={user.avatarUrl} alt={user.name} data-ai-hint="person portrait"/>
+                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+            </Link>
             <div className="flex items-center gap-1">
-              <p className="font-semibold">{user.name}</p>
+              <Link href="/profile">
+                <p className="font-semibold hover:underline">{user.name}</p>
+              </Link>
               {user.isVerified && <VerifiedBadge />}
             </div>
         </div>
@@ -99,10 +104,12 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                 {messages.map((message) => (
                     <div key={message.id} className={`flex items-end gap-2 ${message.sender === 'me' ? 'justify-end' : ''}`}>
                          {message.sender === 'other' && (
-                            <Avatar className="h-6 w-6">
-                                <AvatarImage src={message.avatarUrl} alt={user.name} data-ai-hint="person portrait" />
-                                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
+                            <Link href="/profile">
+                              <Avatar className="h-6 w-6">
+                                  <AvatarImage src={message.avatarUrl} alt={user.name} data-ai-hint="person portrait" />
+                                  <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                              </Avatar>
+                            </Link>
                         )}
                         <div className={`${message.sender === 'me' ? 'bg-primary text-primary-foreground' : 'bg-accent'} rounded-lg p-2 max-w-[80%]`}>
                             {message.type === 'text' ? (

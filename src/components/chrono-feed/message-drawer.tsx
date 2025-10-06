@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import type { User } from '@/types';
 import VerifiedBadge from './verified-badge';
+import Link from 'next/link';
 
 const dummyUsers: User[] = [
   { name: 'Sarah Miller', avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png', isVerified: true },
@@ -33,14 +34,18 @@ const dummyMessages = dummyUsers.map((user, index) => ({
 
 const MessageItem = ({ message, onUserSelect }: { message: typeof dummyMessages[0], onUserSelect: (user: User) => void }) => (
     <div onClick={() => onUserSelect(message.user)} className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors cursor-pointer">
-      <Avatar className="h-14 w-14">
-        <AvatarImage src={message.user.avatarUrl} alt={message.user.name} data-ai-hint="person portrait" />
-        <AvatarFallback>{message.user.name.charAt(0)}</AvatarFallback>
-      </Avatar>
+      <Link href="/profile" onClick={(e) => e.stopPropagation()}>
+        <Avatar className="h-14 w-14">
+          <AvatarImage src={message.user.avatarUrl} alt={message.user.name} data-ai-hint="person portrait" />
+          <AvatarFallback>{message.user.name.charAt(0)}</AvatarFallback>
+        </Avatar>
+      </Link>
       <div className="flex-1 overflow-hidden">
         <div className="flex items-center gap-1">
+          <Link href="/profile" onClick={(e) => e.stopPropagation()} className="hover:underline">
             <p className="font-semibold truncate">{message.user.name}</p>
-            {message.user.isVerified && <VerifiedBadge />}
+          </Link>
+          {message.user.isVerified && <VerifiedBadge />}
         </div>
         <p className={`text-sm truncate ${message.unread ? 'text-foreground font-bold' : 'text-muted-foreground'}`}>
             {message.lastMessage}
