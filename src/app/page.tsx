@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { User } from '@/types';
 import MinimizedChat from '@/components/chrono-feed/minimized-chat';
 import NotificationDrawer from '@/components/chrono-feed/notification-drawer';
+import StoryReel from '@/components/chrono-feed/story-reel';
 
 type ChatWindowState = {
   user: User;

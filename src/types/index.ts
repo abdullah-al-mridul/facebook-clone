@@ -24,3 +24,10 @@ export type PostType = {
   shares: number;
   commentData?: CommentType[];
 };
+
+export type StoryType = {
+  id: string;
+  user: User;
+  imageUrl: string;
+  imageHint?: string;
+};

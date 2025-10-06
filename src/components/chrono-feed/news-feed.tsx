@@ -5,6 +5,7 @@ import CreatePost from './create-post';
 import Post from './post';
 import PostDialog from './post-dialog';
 import { samplePosts } from '@/lib/data';
+import StoryReel from './story-reel';
 
 
 export default function NewsFeed() {
@@ -12,6 +13,7 @@ export default function NewsFeed() {
 
   return (
     <div className="space-y-6">
+      <StoryReel />
       <CreatePost onOpenDialog={() => setIsDialogOpen(true)} />
       {samplePosts.map((post) => (
         <Post key={post.id} post={post} />
