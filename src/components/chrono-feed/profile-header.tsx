@@ -9,6 +9,7 @@ import ProfileTabs from "./profile-tabs";
 import VerifiedBadge from "./verified-badge";
 import { useRef, useState } from "react";
 import ImageCropDialog from "./image-crop-dialog";
+import EditProfileDialog from "./edit-profile-dialog";
 
 type ProfileHeaderProps = {
     activeTab: string;
@@ -28,6 +29,7 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
   
   const [newCoverPreview, setNewCoverPreview] = useState<string | null>(null);
   const [newProfilePreview, setNewProfilePreview] = useState<string | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const [cropState, setCropState] = useState<CropState>({
       isOpen: false,
@@ -42,7 +44,11 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
   const currentUser = {
     name: 'Current User',
     isVerified: true,
-    friendCount: '1.2k'
+    friendCount: '1.2k',
+    work: 'Works at ChronoFeed',
+    education: 'Studied at University of Design',
+    location: 'Lives in Techville, CA',
+    relationship: 'Single'
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, aspect: number, onSave: (croppedImage: string) => void) => {
@@ -108,6 +114,11 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
         imageSrc={cropState.imageSrc}
         aspect={cropState.aspect}
         onSave={cropState.onSave}
+    />
+     <EditProfileDialog 
+        isOpen={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        user={currentUser}
     />
     <div className="bg-card shadow-sm">
       <input type="file" ref={coverInputRef} onChange={(e) => handleFileChange(e, 16/9, onCoverSave)} accept="image/*" className="hidden" />
@@ -176,7 +187,7 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
                 )}
             </div>
             <div className="mt-4 md:mt-0">
-                <Button>
+                <Button onClick={() => setIsEditDialogOpen(true)}>
                     <Pencil className="mr-2 h-4 w-4" />
                     Edit profile
                 </Button>
