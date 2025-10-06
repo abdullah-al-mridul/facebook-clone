@@ -48,7 +48,7 @@ export default function StoryReel() {
 
     return (
         <>
-            <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-5 gap-2 h-64">
+            <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-5 gap-2 h-56">
                 <StoryCard isCreate onOpenCreate={() => setIsCreateOpen(true)}/>
                 {dummyStories.map((story, index) => (
                     <StoryCard 

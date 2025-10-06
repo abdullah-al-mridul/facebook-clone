@@ -33,7 +33,7 @@ export default function StoryViewer({ stories, startIndex, onClose }: StoryViewe
           <CarouselContent className="h-full">
             {stories.map((story, index) => (
               <CarouselItem key={index} className="h-full">
-                <div className="relative h-full">
+                <div className="relative h-full w-full">
                    <Image
                         src={story.imageUrl}
                         alt={`Story by ${story.user.name}`}
