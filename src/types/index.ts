@@ -37,6 +37,7 @@ export type Message = {
     sender: 'me' | 'other';
     text?: string;
     images?: string[];
+    audioUrl?: string;
     avatarUrl?: string;
 }
 

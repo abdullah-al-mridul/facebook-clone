@@ -7,8 +7,8 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { User } from "@/types";
-import { Minus, Send, X, Image as ImageIcon } from "lucide-react";
-import { useState, useRef, ChangeEvent } from "react";
+import { Minus, Send, X, Image as ImageIcon, Mic, Square, Trash2, Play } from "lucide-react";
+import { useState, useRef, ChangeEvent, useEffect } from "react";
 import Image from 'next/image';
 import VerifiedBadge from "./verified-badge";
 import Link from "next/link";
@@ -25,6 +25,7 @@ type Message = {
     sender: 'me' | 'other';
     text?: string;
     images?: string[];
+    audioUrl?: string;
     avatarUrl?: string;
 }
 
@@ -41,25 +42,30 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioPreview, setAudioPreview] = useState<string | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+
   const handleSendMessage = () => {
     const text = inputValue.trim();
-    if (text === '' && imagePreviews.length === 0) return;
+    if (text === '' && imagePreviews.length === 0 && !audioPreview) return;
 
     const newMessage: Message = {
-        id: messages.length + 1,
+        id: Date.now(),
         sender: 'me',
     };
 
-    if (text) {
-        newMessage.text = text;
-    }
-    if (imagePreviews.length > 0) {
-        newMessage.images = imagePreviews;
-    }
+    if (text) newMessage.text = text;
+    if (imagePreviews.length > 0) newMessage.images = imagePreviews;
+    if (audioPreview) newMessage.audioUrl = audioPreview;
     
     setMessages(prev => [...prev, newMessage]);
     setInputValue('');
     setImagePreviews([]);
+    setAudioPreview(null);
     if (imageInputRef.current) {
         imageInputRef.current.value = '';
     }
@@ -93,6 +99,49 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
         handleSendMessage();
     }
   }
+
+  const startRecording = async () => {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorderRef.current = new MediaRecorder(stream);
+        audioChunksRef.current = [];
+        
+        mediaRecorderRef.current.ondataavailable = (event) => {
+            audioChunksRef.current.push(event.data);
+        };
+        
+        mediaRecorderRef.current.onstop = () => {
+            const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            setAudioPreview(audioUrl);
+            stream.getTracks().forEach(track => track.stop());
+        };
+        
+        mediaRecorderRef.current.start();
+        setIsRecording(true);
+    } catch (error) {
+        console.error("Error accessing microphone:", error);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+        mediaRecorderRef.current.stop();
+        setIsRecording(false);
+    }
+  };
+
+  const discardRecording = () => {
+    setAudioPreview(null);
+  };
+
+  const toggleRecording = () => {
+    if (isRecording) {
+        stopRecording();
+    } else {
+        startRecording();
+    }
+  };
 
 
   return (
@@ -133,8 +182,8 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                         
                         <div className={cn(
                             "rounded-lg max-w-[80%]",
-                            message.images && message.images.length > 0 && "min-w-[150px]",
-                            message.text ? 'p-2' : 'p-0 bg-transparent',
+                            (message.images && message.images.length > 0) || message.audioUrl ? "min-w-[150px]" : "",
+                            (message.text || message.audioUrl) ? 'p-2' : 'p-0 bg-transparent',
                             message.sender === 'me' ? 'bg-primary text-primary-foreground' : 'bg-accent'
                         )}>
                             {message.images && message.images.length > 0 && (
@@ -149,6 +198,9 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                                         </div>
                                     ))}
                                 </div>
+                            )}
+                            {message.audioUrl && (
+                                <audio controls src={message.audioUrl} className="w-full" />
                             )}
                             {message.text && <p className="text-sm break-words">{message.text}</p>}
                         </div>
@@ -175,30 +227,45 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                 ))}
             </div>
          )}
+         {audioPreview && (
+            <div className="w-full flex items-center gap-2 p-2 bg-accent rounded-lg">
+                <audio ref={audioRef} src={audioPreview} className="flex-1 w-full" controls/>
+                <Button variant="ghost" size="icon" onClick={discardRecording}>
+                    <Trash2 className="h-5 w-5 text-destructive" />
+                </Button>
+            </div>
+         )}
          <div className="flex items-center w-full gap-2">
-            <input type="file" ref={imageInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" multiple/>
-            <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => imageInputRef.current?.click()}>
-                <ImageIcon className="h-5 w-5 text-primary"/>
-            </Button>
+            {!isRecording && !inputValue && (
+              <>
+                <input type="file" ref={imageInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" multiple/>
+                <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => imageInputRef.current?.click()}>
+                    <ImageIcon className="h-5 w-5 text-primary"/>
+                </Button>
+              </>
+            )}
             <div className="relative w-full">
                 <Input 
-                    placeholder="Type a message..." 
+                    placeholder={isRecording ? "Recording..." : "Type a message..."} 
                     className="pr-10 bg-accent rounded-full"
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
+                    disabled={isRecording}
                 />
-                <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8" onClick={handleSendMessage}>
+                 {!inputValue && (
+                    <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8" onClick={toggleRecording}>
+                        {isRecording ? <Square className="h-5 w-5 text-red-500" /> : <Mic className="h-5 w-5 text-primary"/>}
+                    </Button>
+                 )}
+            </div>
+            { (inputValue || imagePreviews.length > 0 || audioPreview) &&
+                <Button variant="ghost" size="icon" className="h-9 w-9" onClick={handleSendMessage}>
                     <Send className="h-5 w-5 text-primary"/>
                 </Button>
-            </div>
+            }
         </div>
       </CardFooter>
     </Card>
   );
 }
-
-    
-
-    
-
