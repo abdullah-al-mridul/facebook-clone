@@ -7,13 +7,15 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { User } from "@/types";
-import { Minus, Send, X, Image as ImageIcon, Mic, Square, Trash2 } from "lucide-react";
+import { Minus, Send, X, Image as ImageIcon, Mic, Square, Trash2, Smile } from "lucide-react";
 import { useState, useRef, ChangeEvent, useEffect } from "react";
 import Image from 'next/image';
 import VerifiedBadge from "./verified-badge";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import AudioPlayer from "./audio-player";
+import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 type ChatboxProps = {
   user: User;
@@ -150,6 +152,9 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
     }
   };
 
+  const onEmojiClick = (emojiData: EmojiClickData) => {
+    setInputValue(prev => prev + emojiData.emoji);
+  }
 
   return (
     <Card className="w-full sm:w-80 h-[450px] flex flex-col shadow-2xl rounded-t-lg sm:rounded-lg">
@@ -264,17 +269,29 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
             <div className="relative w-full">
                 <Input 
                     placeholder={isRecording ? "Recording..." : "Type a message..."} 
-                    className="pr-10 bg-accent rounded-full"
+                    className="pr-20 bg-accent rounded-full"
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
                     disabled={isRecording || !!audioPreview}
                 />
-                 {!inputValue && !audioPreview && (
-                    <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8" onClick={toggleRecording}>
-                        {isRecording ? <Square className="h-5 w-5 text-red-500" /> : <Mic className="h-5 w-5 text-primary"/>}
-                    </Button>
-                 )}
+                 <div className="absolute right-1 top-1/2 -translate-y-1/2 flex">
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <Smile className="h-5 w-5 text-primary"/>
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 border-none mb-2">
+                            <EmojiPicker onEmojiClick={onEmojiClick} />
+                        </PopoverContent>
+                    </Popover>
+                    {!inputValue && !audioPreview && (
+                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={toggleRecording}>
+                            {isRecording ? <Square className="h-5 w-5 text-red-500" /> : <Mic className="h-5 w-5 text-primary"/>}
+                        </Button>
+                    )}
+                 </div>
             </div>
             { (inputValue || imagePreviews.length > 0 || audioPreview) &&
                 <Button variant="ghost" size="icon" className="h-9 w-9" onClick={handleSendMessage}>
