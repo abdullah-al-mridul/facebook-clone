@@ -134,7 +134,7 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                         <div className={cn(
                             "rounded-lg p-2 max-w-[80%]",
                              message.sender === 'me' ? 'bg-primary text-primary-foreground' : 'bg-accent',
-                             !message.text && 'p-1'
+                             !message.text && 'p-1 bg-transparent'
                         )}>
                             {message.images && message.images.length > 0 && (
                                 <div className={cn(
@@ -196,5 +196,7 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
     </Card>
   );
 }
+
+    
 
     
