@@ -11,6 +11,7 @@ import { useRef, useState } from "react";
 import ImageCropDialog from "./image-crop-dialog";
 import EditProfileDialog from "./edit-profile-dialog";
 import { useToast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 type ProfileHeaderProps = {
     activeTab: string;
@@ -109,13 +110,6 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
     setCropState(prev => ({ ...prev, isOpen: false }));
   }
 
-  const handleGetVerified = () => {
-    toast({
-        title: "Verification Request",
-        description: "This feature is coming soon! You'll be able to apply for a verification badge from here.",
-    });
-  }
-
   return (
     <>
     <ImageCropDialog 
@@ -197,10 +191,12 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
                 )}
             </div>
             <div className="mt-4 md:mt-0 flex items-center gap-2">
-                <Button variant="secondary" onClick={handleGetVerified}>
-                    <ShieldCheck className="mr-2 h-4 w-4" />
-                    Get Verified
-                </Button>
+                <Link href="/verify">
+                    <Button variant="secondary">
+                        <ShieldCheck className="mr-2 h-4 w-4" />
+                        Get Verified
+                    </Button>
+                </Link>
                 <Button onClick={() => setIsEditDialogOpen(true)}>
                     <Pencil className="mr-2 h-4 w-4" />
                     Edit profile
