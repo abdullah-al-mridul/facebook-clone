@@ -7,7 +7,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { User } from "@/types";
-import { Minus, Send, X, Image as ImageIcon, Mic, Square, Trash2, Smile } from "lucide-react";
+import { Minus, Send, X, Image as ImageIcon, Mic, Square, Trash2, Smile, Phone, Video } from "lucide-react";
 import { useState, useRef, ChangeEvent, useEffect } from "react";
 import Image from 'next/image';
 import VerifiedBadge from "./verified-badge";
@@ -174,6 +174,8 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
             </div>
         </div>
         <div className="flex items-center">
+            <Button variant="ghost" size="icon" className="h-8 w-8"><Phone /></Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8"><Video /></Button>
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onMinimize}><Minus/></Button>
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onClose}><X/></Button>
         </div>
@@ -303,3 +305,5 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
     </Card>
   );
 }
+
+    
