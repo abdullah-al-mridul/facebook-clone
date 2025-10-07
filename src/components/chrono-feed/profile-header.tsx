@@ -3,13 +3,14 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Camera, Check, Pencil, X } from "lucide-react";
+import { Camera, Check, Pencil, ShieldCheck, X } from "lucide-react";
 import Image from "next/image";
 import ProfileTabs from "./profile-tabs";
 import VerifiedBadge from "./verified-badge";
 import { useRef, useState } from "react";
 import ImageCropDialog from "./image-crop-dialog";
 import EditProfileDialog from "./edit-profile-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 type ProfileHeaderProps = {
     activeTab: string;
@@ -30,6 +31,8 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
   const [newCoverPreview, setNewCoverPreview] = useState<string | null>(null);
   const [newProfilePreview, setNewProfilePreview] = useState<string | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
+  const { toast } = useToast();
 
   const [cropState, setCropState] = useState<CropState>({
       isOpen: false,
@@ -104,6 +107,13 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
   const onProfileSave = (croppedImage: string) => {
     setNewProfilePreview(croppedImage);
     setCropState(prev => ({ ...prev, isOpen: false }));
+  }
+
+  const handleGetVerified = () => {
+    toast({
+        title: "Verification Request",
+        description: "This feature is coming soon! You'll be able to apply for a verification badge from here.",
+    });
   }
 
   return (
@@ -186,7 +196,11 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
                     </>
                 )}
             </div>
-            <div className="mt-4 md:mt-0">
+            <div className="mt-4 md:mt-0 flex items-center gap-2">
+                <Button variant="secondary" onClick={handleGetVerified}>
+                    <ShieldCheck className="mr-2 h-4 w-4" />
+                    Get Verified
+                </Button>
                 <Button onClick={() => setIsEditDialogOpen(true)}>
                     <Pencil className="mr-2 h-4 w-4" />
                     Edit profile
