@@ -133,6 +133,7 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                         
                         <div className={cn(
                             "rounded-lg max-w-[80%]",
+                            message.images && message.images.length > 0 && "min-w-[150px]",
                             message.text ? 'p-2' : 'p-0 bg-transparent',
                             message.sender === 'me' ? 'bg-primary text-primary-foreground' : 'bg-accent'
                         )}>
@@ -200,3 +201,4 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
     
 
     
+
