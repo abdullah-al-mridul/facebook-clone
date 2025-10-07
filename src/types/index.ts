@@ -12,6 +12,12 @@ export type CommentType = {
   content: string;
 };
 
+export type PostAnalyticsType = {
+  reach: number;
+  likes: number;
+  comments: number;
+};
+
 export type PostType = {
   id: string;
   user: User;
@@ -23,6 +29,7 @@ export type PostType = {
   comments: number;
   shares: number;
   commentData?: CommentType[];
+  analytics?: PostAnalyticsType;
 };
 
 export type StoryType = {

@@ -15,7 +15,12 @@ export const samplePosts: PostType[] = [
       commentData: [
           { id: 'c1', user: { name: 'John Smith', avatarUrl: 'https://placehold.co/40x40/9CA3AF/FFFFFF.png' }, timestamp: '1h ago', content: 'Looks amazing! I wish I was there.' },
           { id: 'c2', user: { name: 'Alice Johnson', avatarUrl: 'https://placehold.co/40x40/F3F4F6/1F2937.png', isVerified: true }, timestamp: '30m ago', content: 'So jealous! Enjoy the weather!' }
-      ]
+      ],
+      analytics: {
+        reach: 1500,
+        likes: 128,
+        comments: 16,
+      }
     },
     {
       id: '2',
@@ -25,7 +30,12 @@ export const samplePosts: PostType[] = [
       likes: 256,
       comments: 42,
       shares: 12,
-      commentData: []
+      commentData: [],
+      analytics: {
+        reach: 5200,
+        likes: 256,
+        comments: 42,
+      }
     },
     {
       id: '3',
@@ -39,6 +49,11 @@ export const samplePosts: PostType[] = [
       shares: 5,
       commentData: [
           { id: 'c3', user: { name: 'Jane Doe', avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png', isVerified: true }, timestamp: '1d ago', content: 'That looks so yummy! You have to share the recipe!' }
-      ]
+      ],
+      analytics: {
+        reach: 980,
+        likes: 95,
+        comments: 23,
+      }
     },
   ];

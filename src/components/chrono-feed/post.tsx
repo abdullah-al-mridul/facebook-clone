@@ -1,4 +1,3 @@
-
 'use client';
 import Image from 'next/image';
 import type { PostType } from '@/types';
@@ -6,13 +5,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { MessageSquare, MoreHorizontal, Share2, ThumbsUp, Eye } from 'lucide-react';
+import { MessageSquare, MoreHorizontal, Share2, ThumbsUp, Eye, BarChart2 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useState } from 'react';
 import CommentOverlay from './comment-overlay';
 import ShareOverlay from './share-overlay';
 import VerifiedBadge from './verified-badge';
 import Link from 'next/link';
+import PostAnalytics from './post-analytics';
 
 type PostProps = {
   post: PostType;
@@ -28,6 +28,7 @@ export default function Post({ post, isOverlay = false }: PostProps) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [isCommentOverlayOpen, setIsCommentOverlayOpen] = useState(false);
   const [isShareOverlayOpen, setIsShareOverlayOpen] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
 
   const handleReaction = (newReaction: string) => {
     setReaction(newReaction);
@@ -101,6 +102,8 @@ export default function Post({ post, isOverlay = false }: PostProps) {
         </div>
       </div>
 
+      {showAnalytics && post.analytics && <PostAnalytics analytics={post.analytics} />}
+
       {!isOverlay && (
         <>
         <Separator className="mx-4 w-auto" />
@@ -133,6 +136,10 @@ export default function Post({ post, isOverlay = false }: PostProps) {
             <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground font-semibold" onClick={() => setIsShareOverlayOpen(true)}>
               <Share2 />
               Share
+            </Button>
+             <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground font-semibold" onClick={() => setShowAnalytics(!showAnalytics)}>
+              <BarChart2 />
+              Insights
             </Button>
           </div>
         </CardFooter>
