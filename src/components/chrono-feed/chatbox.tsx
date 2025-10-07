@@ -12,6 +12,7 @@ import { useState, useRef, ChangeEvent } from "react";
 import Image from 'next/image';
 import VerifiedBadge from "./verified-badge";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 type ChatboxProps = {
   user: User;
@@ -23,7 +24,7 @@ type Message = {
     id: number;
     sender: 'me' | 'other';
     type: 'text' | 'image';
-    content: string;
+    content: string | string[];
     avatarUrl?: string;
 }
 
@@ -39,33 +40,51 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
   const [inputValue, setInputValue] = useState('');
   const imageInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSendMessage = () => {
-    if (inputValue.trim() === '') return;
+  const handleSendMessage = (imageUrls: string[] = []) => {
+    const text = inputValue.trim();
+    if (text === '' && imageUrls.length === 0) return;
 
-    const newMessage: Message = {
-        id: messages.length + 1,
-        sender: 'me',
-        type: 'text',
-        content: inputValue.trim(),
-    };
-    setMessages(prev => [...prev, newMessage]);
+    const newMessages: Message[] = [];
+
+    if (imageUrls.length > 0) {
+        newMessages.push({
+            id: messages.length + newMessages.length + 1,
+            sender: 'me',
+            type: 'image',
+            content: imageUrls
+        });
+    }
+
+    if (text !== '') {
+        newMessages.push({
+            id: messages.length + newMessages.length + 1,
+            sender: 'me',
+            type: 'text',
+            content: text,
+        });
+    }
+    
+    setMessages(prev => [...prev, ...newMessages]);
     setInputValue('');
   }
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const newMessage: Message = {
-                id: messages.length + 1,
-                sender: 'me',
-                type: 'image',
-                content: event.target?.result as string,
-            };
-            setMessages(prev => [...prev, newMessage]);
-        };
-        reader.readAsDataURL(file);
+    const files = e.target.files;
+    if (files && files.length > 0) {
+        const imageUrls: string[] = [];
+        const filePromises = Array.from(files).map(file => {
+            return new Promise<string>((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    resolve(event.target?.result as string);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        Promise.all(filePromises).then(urls => {
+            handleSendMessage(urls);
+        })
     }
   }
 
@@ -111,13 +130,23 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                               </Avatar>
                             </Link>
                         )}
-                        <div className={`${message.sender === 'me' ? 'bg-primary text-primary-foreground' : 'bg-accent'} rounded-lg p-2 max-w-[80%]`}>
-                            {message.type === 'text' ? (
-                                <p className="text-sm">{message.content}</p>
-                            ) : (
-                                <Image src={message.content} alt="sent image" width={200} height={150} className="rounded-md object-cover" />
-                            )}
-                        </div>
+                        
+                        {message.type === 'text' ? (
+                             <div className={`${message.sender === 'me' ? 'bg-primary text-primary-foreground' : 'bg-accent'} rounded-lg p-2 max-w-[80%]`}>
+                                <p className="text-sm break-words">{message.content as string}</p>
+                            </div>
+                        ) : (
+                             <div className={cn(
+                                "grid gap-1 w-[80%]",
+                                Array.isArray(message.content) && message.content.length > 1 ? "grid-cols-2" : "grid-cols-1"
+                             )}>
+                                {(message.content as string[]).map((img, index) => (
+                                    <div key={index} className="relative aspect-square">
+                                         <Image src={img} alt="sent image" fill className="rounded-md object-cover" />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
@@ -125,7 +154,7 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
       </CardContent>
       <CardFooter className="p-2 border-t bg-card rounded-b-lg">
          <div className="flex items-center w-full gap-2">
-            <input type="file" ref={imageInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" />
+            <input type="file" ref={imageInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" multiple/>
             <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => imageInputRef.current?.click()}>
                 <ImageIcon className="h-5 w-5 text-primary"/>
             </Button>
@@ -137,7 +166,7 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
                 />
-                <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8" onClick={handleSendMessage}>
+                <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8" onClick={() => handleSendMessage()}>
                     <Send className="h-5 w-5 text-primary"/>
                 </Button>
             </div>
@@ -146,3 +175,4 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
     </Card>
   );
 }
+
