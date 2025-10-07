@@ -132,15 +132,15 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                         )}
                         
                         <div className={cn(
-                            "rounded-lg p-2 max-w-[80%]",
-                             message.sender === 'me' ? 'bg-primary text-primary-foreground' : 'bg-accent',
-                             !message.text && 'p-1 bg-transparent'
+                            "rounded-lg max-w-[80%]",
+                            message.text ? 'p-2' : 'p-0 bg-transparent',
+                            message.sender === 'me' ? 'bg-primary text-primary-foreground' : 'bg-accent'
                         )}>
                             {message.images && message.images.length > 0 && (
                                 <div className={cn(
                                     "grid gap-1",
                                     message.images.length > 1 ? "grid-cols-2" : "grid-cols-1",
-                                    message.text && "mb-2"
+                                    message.text && 'mb-2'
                                 )}>
                                     {message.images.map((img, index) => (
                                         <div key={index} className="relative aspect-square">
