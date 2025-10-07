@@ -27,7 +27,7 @@ export default function PostAnalytics({ analytics }: PostAnalyticsProps) {
             <div className="grid grid-cols-3 gap-4">
                 <AnalyticsItem icon={BarChart2} value={analytics.reach} label="Reach" />
                 <AnalyticsItem icon={ThumbsUp} value={analytics.likes} label="Likes" />
-                <Analyticsİcon icon={MessageCircle} value={analytics.comments} label="Comments" />
+                <AnalyticsItem icon={MessageCircle} value={analytics.comments} label="Comments" />
             </div>
         </CardContent>
       </Card>
