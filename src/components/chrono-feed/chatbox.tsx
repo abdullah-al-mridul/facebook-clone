@@ -7,12 +7,13 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { User } from "@/types";
-import { Minus, Send, X, Image as ImageIcon, Mic, Square, Trash2, Play } from "lucide-react";
+import { Minus, Send, X, Image as ImageIcon, Mic, Square, Trash2 } from "lucide-react";
 import { useState, useRef, ChangeEvent, useEffect } from "react";
 import Image from 'next/image';
 import VerifiedBadge from "./verified-badge";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import AudioPlayer from "./audio-player";
 
 type ChatboxProps = {
   user: User;
@@ -46,8 +47,14 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
   const [audioPreview, setAudioPreview] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
-  const audioRef = useRef<HTMLAudioElement>(null);
 
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+        scrollAreaRef.current.scrollTo({ top: scrollAreaRef.current.scrollHeight });
+    }
+  }, [messages])
 
   const handleSendMessage = () => {
     const text = inputValue.trim();
@@ -103,7 +110,7 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
   const startRecording = async () => {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorderRef.current = new MediaRecorder(stream);
+        mediaRecorderRef.current = new MediaRecorder(stream, { mimeType: 'audio/webm' });
         audioChunksRef.current = [];
         
         mediaRecorderRef.current.ondataavailable = (event) => {
@@ -111,7 +118,7 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
         };
         
         mediaRecorderRef.current.onstop = () => {
-            const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+            const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
             const audioUrl = URL.createObjectURL(audioBlob);
             setAudioPreview(audioUrl);
             stream.getTracks().forEach(track => track.stop());
@@ -167,7 +174,7 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
         </div>
       </CardHeader>
       <CardContent className="flex-1 p-2 overflow-y-auto bg-background">
-        <ScrollArea className="h-full pr-2">
+        <ScrollArea className="h-full pr-2" ref={scrollAreaRef}>
             <div className="space-y-4">
                 {messages.map((message) => (
                     <div key={message.id} className={`flex items-end gap-2 ${message.sender === 'me' ? 'justify-end' : ''}`}>
@@ -182,15 +189,15 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                         
                         <div className={cn(
                             "rounded-lg max-w-[80%]",
-                            (message.images && message.images.length > 0) || message.audioUrl ? "min-w-[150px]" : "",
-                            (message.text || message.audioUrl) ? 'p-2' : 'p-0 bg-transparent',
+                            (message.images && message.images.length > 0) ? 'min-w-[150px]' : '',
+                            (message.images && message.images.length > 0) || message.audioUrl ? "p-1" : "p-2",
                             message.sender === 'me' ? 'bg-primary text-primary-foreground' : 'bg-accent'
                         )}>
                             {message.images && message.images.length > 0 && (
                                 <div className={cn(
                                     "grid gap-1",
                                     message.images.length > 1 ? "grid-cols-2" : "grid-cols-1",
-                                    message.text && 'mb-2'
+                                    message.text && 'mb-1'
                                 )}>
                                     {message.images.map((img, index) => (
                                         <div key={index} className="relative aspect-square">
@@ -199,10 +206,17 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                                     ))}
                                 </div>
                             )}
-                            {message.audioUrl && (
-                                <audio controls src={message.audioUrl} className="w-full" />
+                             {message.audioUrl && (
+                                <AudioPlayer 
+                                    audioUrl={message.audioUrl} 
+                                    isSender={message.sender === 'me'}
+                                />
                             )}
-                            {message.text && <p className="text-sm break-words">{message.text}</p>}
+                            {message.text && 
+                                <p className={cn("text-sm break-words", (message.images || message.audioUrl) && "p-2")}>
+                                    {message.text}
+                                </p>
+                            }
                         </div>
                     </div>
                 ))}
@@ -211,32 +225,34 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
       </CardContent>
       <CardFooter className="p-2 border-t bg-card rounded-b-lg flex flex-col items-start gap-2">
          {imagePreviews.length > 0 && (
-            <div className="w-full grid grid-cols-4 gap-2">
-                {imagePreviews.map((src, index) => (
-                    <div key={index} className="relative aspect-square">
-                        <Image src={src} alt="Image preview" fill className="rounded-md object-cover"/>
-                        <Button
-                            variant="destructive"
-                            size="icon"
-                            className="absolute -top-2 -right-2 h-5 w-5 rounded-full"
-                            onClick={() => removeImagePreview(index)}
-                        >
-                            <X className="h-3 w-3" />
-                        </Button>
-                    </div>
-                ))}
+            <div className="w-full p-2 bg-accent rounded-lg">
+              <div className="grid grid-cols-4 gap-2">
+                  {imagePreviews.map((src, index) => (
+                      <div key={index} className="relative aspect-square">
+                          <Image src={src} alt="Image preview" fill className="rounded-md object-cover"/>
+                          <Button
+                              variant="destructive"
+                              size="icon"
+                              className="absolute -top-2 -right-2 h-5 w-5 rounded-full"
+                              onClick={() => removeImagePreview(index)}
+                          >
+                              <X className="h-3 w-3" />
+                          </Button>
+                      </div>
+                  ))}
+              </div>
             </div>
          )}
          {audioPreview && (
             <div className="w-full flex items-center gap-2 p-2 bg-accent rounded-lg">
-                <audio ref={audioRef} src={audioPreview} className="flex-1 w-full" controls/>
+                <AudioPlayer audioUrl={audioPreview} isSender={true} />
                 <Button variant="ghost" size="icon" onClick={discardRecording}>
                     <Trash2 className="h-5 w-5 text-destructive" />
                 </Button>
             </div>
          )}
          <div className="flex items-center w-full gap-2">
-            {!isRecording && !inputValue && (
+            {!isRecording && !inputValue && !audioPreview && (
               <>
                 <input type="file" ref={imageInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" multiple/>
                 <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => imageInputRef.current?.click()}>
@@ -251,9 +267,9 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    disabled={isRecording}
+                    disabled={isRecording || !!audioPreview}
                 />
-                 {!inputValue && (
+                 {!inputValue && !audioPreview && (
                     <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8" onClick={toggleRecording}>
                         {isRecording ? <Square className="h-5 w-5 text-red-500" /> : <Mic className="h-5 w-5 text-primary"/>}
                     </Button>
@@ -269,3 +285,5 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
     </Card>
   );
 }
+
+    
