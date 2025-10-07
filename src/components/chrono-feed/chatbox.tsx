@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import AudioPlayer from "./audio-player";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { useToast } from "@/hooks/use-toast";
 
 type ChatboxProps = {
   user: User;
@@ -51,6 +52,8 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
   const audioChunksRef = useRef<Blob[]>([]);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  const { toast } = useToast();
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -156,6 +159,13 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
     setInputValue(prev => prev + emojiData.emoji);
   }
 
+  const handleCallClick = (type: 'audio' | 'video') => {
+    toast({
+        title: `Start ${type} call?`,
+        description: "This feature is coming soon!",
+    });
+  };
+
   return (
     <Card className="w-full sm:w-80 h-[450px] flex flex-col shadow-2xl rounded-t-lg sm:rounded-lg">
       <CardHeader className="p-2 flex flex-row items-center justify-between border-b bg-card rounded-t-lg">
@@ -174,8 +184,8 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
             </div>
         </div>
         <div className="flex items-center">
-            <Button variant="ghost" size="icon" className="h-8 w-8"><Phone /></Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8"><Video /></Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleCallClick('audio')}><Phone /></Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleCallClick('video')}><Video /></Button>
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onMinimize}><Minus/></Button>
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onClose}><X/></Button>
         </div>
