@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Bell, Home, MessageCircle, Store, Users, Clapperboard, Menu } from 'lucide-react';
+import { Bell, Home, MessageCircle, Store, Users, Clapperboard, Menu, Moon, Sun, Laptop } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -13,9 +13,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
 import LeftSidebar from './left-sidebar';
+import { useTheme } from 'next-themes';
 
 const NavLink = ({ href, icon: Icon, active = false }: { href: string, icon: React.ElementType, active?: boolean }) => (
   <Link href={href} className={`px-4 lg:px-8 py-3 relative flex items-center justify-center h-full ${active ? 'text-primary' : 'text-muted-foreground hover:bg-accent'} rounded-lg transition-colors`}>
@@ -32,6 +36,7 @@ type HeaderProps = {
 
 export default function Header({ onMessagesClick, onNotificationsClick }: HeaderProps) {
   const pathname = usePathname();
+  const { setTheme } = useTheme();
   
   return (
     <header className="fixed top-0 left-0 right-0 h-14 bg-card border-b z-50 flex items-center justify-between px-2 sm:px-4">
@@ -80,6 +85,22 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
               <DropdownMenuItem>Profile</DropdownMenuItem>
             </Link>
             <DropdownMenuItem>Settings</DropdownMenuItem>
+             <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                    Theme
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                    <DropdownMenuItem onClick={() => setTheme('light')}>
+                        <Sun className="mr-2" /> Light
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme('dark')}>
+                        <Moon className="mr-2" /> Dark
+                    </DropdownMenuItem>
+                     <DropdownMenuItem onClick={() => setTheme('system')}>
+                        <Laptop className="mr-2" /> System
+                    </DropdownMenuItem>
+                </DropdownMenuSubContent>
+            </DropdownMenuSub>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Log out</DropdownMenuItem>
           </DropdownMenuContent>
