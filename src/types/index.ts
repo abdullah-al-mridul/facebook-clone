@@ -31,3 +31,13 @@ export type StoryType = {
   imageUrl: string;
   imageHint?: string;
 };
+
+export type Message = {
+    id: number;
+    sender: 'me' | 'other';
+    text?: string;
+    images?: string[];
+    avatarUrl?: string;
+}
+
+    
