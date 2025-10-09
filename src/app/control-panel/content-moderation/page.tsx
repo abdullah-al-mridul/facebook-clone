@@ -9,8 +9,8 @@ import NotificationDrawer from '@/components/chrono-feed/notification-drawer';
 import { User } from '@/types';
 import Chatbox from '@/components/chrono-feed/chatbox';
 import MinimizedChat from '@/components/chrono-feed/minimized-chat';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, FileText, BarChart3, Shield } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, FileText } from 'lucide-react';
 import Link from 'next/link';
 
 type ChatWindowState = {
@@ -18,23 +18,7 @@ type ChatWindowState = {
   isMinimized: boolean;
 };
 
-const ControlPanelCard = ({ title, description, icon: Icon, href }: { title: string, description: string, icon: React.ElementType, href: string }) => (
-    <Link href={href}>
-        <div className="hover:bg-accent hover:border-primary transition-colors h-full">
-        <Card className="h-full">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-lg font-bold">{title}</CardTitle>
-                <Icon className="h-6 w-6 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-                <CardDescription>{description}</CardDescription>
-            </CardContent>
-        </Card>
-        </div>
-    </Link>
-);
-
-export default function ControlPanelPage() {
+export default function ContentModerationPage() {
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
   const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] = useState(false);
   const [openChats, setOpenChats] = useState<ChatWindowState[]>([]);
@@ -93,35 +77,23 @@ export default function ControlPanelPage() {
         </div>
         <main className="flex-1 lg:pl-72 pt-14">
           <div className="p-4 sm:p-6 lg:p-8 w-full max-w-5xl mx-auto">
-            <div className="mb-6">
-                <h1 className="text-3xl font-bold">Control Panel</h1>
-                <p className="text-muted-foreground">Manage your social media platform.</p>
+            <div className="mb-6 flex items-center gap-4">
+                 <Link href="/control-panel">
+                    <Button variant="outline" size="icon">
+                        <ArrowLeft />
+                    </Button>
+                 </Link>
+                 <div>
+                    <h1 className="text-3xl font-bold flex items-center gap-2">
+                        <FileText className="h-8 w-8" />
+                        Content Moderation
+                    </h1>
+                    <p className="text-muted-foreground">Review and act on reported posts, comments, and users.</p>
+                 </div>
             </div>
-            <div className="grid gap-6 md:grid-cols-2">
-                <ControlPanelCard 
-                    title="User Management" 
-                    description="View, edit, and manage all users on the platform." 
-                    icon={Users}
-                    href="/control-panel/user-management"
-                />
-                <ControlPanelCard 
-                    title="Content Moderation" 
-                    description="Review and act on reported posts, comments, and users." 
-                    icon={FileText}
-                    href="/control-panel/content-moderation"
-                />
-                 <ControlPanelCard 
-                    title="Site Analytics" 
-                    description="Monitor key metrics like user growth and engagement." 
-                    icon={BarChart3}
-                    href="/control-panel/site-analytics"
-                />
-                <ControlPanelCard 
-                    title="Security Settings" 
-                    description="Configure authentication, access control, and other security features." 
-                    icon={Shield}
-                    href="/control-panel/security-settings"
-                />
+            {/* Placeholder for content moderation features */}
+            <div className="border-2 border-dashed rounded-lg p-12 text-center">
+                <p className="text-muted-foreground">Content moderation tools will go here.</p>
             </div>
           </div>
         </main>
