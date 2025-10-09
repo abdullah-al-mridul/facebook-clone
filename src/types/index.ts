@@ -26,10 +26,13 @@ export type ReactionType = {
   reaction: ReactionName;
 };
 
+export type PostPrivacy = 'Public' | 'Friends' | 'Only Me';
+
 export type PostType = {
   id: string;
   user: User;
   timestamp: string;
+  privacy: PostPrivacy;
   content: string;
   imageUrl?: string;
   imageHint?: string;

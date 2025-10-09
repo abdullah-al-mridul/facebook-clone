@@ -1,22 +1,34 @@
 
+
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
-import { Image as ImageIcon, Smile, User, Video, X } from 'lucide-react';
+import { Image as ImageIcon, Smile, User, Video, X, Globe, Users, Lock, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { PostPrivacy } from '@/types';
 
 type PostDialogProps = {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
 };
 
+const privacyOptions: { value: PostPrivacy, label: string, icon: React.ElementType }[] = [
+    { value: 'Public', label: 'Public', icon: Globe },
+    { value: 'Friends', label: 'Friends', icon: Users },
+    { value: 'Only Me', label: 'Only Me', icon: Lock },
+];
+
 export default function PostDialog({ isOpen, onOpenChange }: PostDialogProps) {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [privacy, setPrivacy] = useState<PostPrivacy>('Public');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const selectedPrivacy = privacyOptions.find(p => p.value === privacy)!;
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -46,6 +58,7 @@ export default function PostDialog({ isOpen, onOpenChange }: PostDialogProps) {
   const handleClose = (open: boolean) => {
     if (!open) {
         setImagePreviews([]);
+        setPrivacy('Public');
     }
     onOpenChange(open);
   }
@@ -63,7 +76,23 @@ export default function PostDialog({ isOpen, onOpenChange }: PostDialogProps) {
           </Avatar>
           <div>
             <p className="font-semibold">Current User</p>
-            <p className="text-xs text-muted-foreground">Public</p>
+             <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="secondary" size="sm" className="h-auto px-2 py-0.5 text-xs">
+                        <selectedPrivacy.icon className="h-3 w-3 mr-1" />
+                        {selectedPrivacy.label}
+                        <ChevronDown className="h-3 w-3 ml-1" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                    {privacyOptions.map(option => (
+                         <DropdownMenuItem key={option.value} onClick={() => setPrivacy(option.value)}>
+                            <option.icon className="h-4 w-4 mr-2" />
+                            {option.label}
+                        </DropdownMenuItem>
+                    ))}
+                </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
         <Textarea

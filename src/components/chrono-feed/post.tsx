@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { MessageSquare, MoreHorizontal, Share2, ThumbsUp, Eye, BarChart2 } from 'lucide-react';
+import { MessageSquare, MoreHorizontal, Share2, ThumbsUp, Eye, BarChart2, Globe, Users, Lock } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useState } from 'react';
 import CommentOverlay from './comment-overlay';
@@ -32,6 +32,12 @@ const reactions = [
     { name: 'Sad', icon: '/sad.png' },
     { name: 'Angry', icon: '/angry.png' },
 ]
+
+const privacyIcons = {
+    'Public': Globe,
+    'Friends': Users,
+    'Only Me': Lock
+}
 
 const Reaction = ({ children, onClick, name }: { children: React.ReactNode, onClick: () => void; name: string }) => (
     <Tooltip>
@@ -66,6 +72,7 @@ export default function Post({ post, isOverlay = false }: PostProps) {
   }
   
   const PostWrapper = isOverlay ? 'div' : Card;
+  const PrivacyIcon = privacyIcons[post.privacy];
 
   return (
     <>
@@ -86,7 +93,17 @@ export default function Post({ post, isOverlay = false }: PostProps) {
                 </Link>
                 {post.user.isVerified && <VerifiedBadge />}
               </div>
-              <p className="text-xs text-muted-foreground">{post.timestamp}</p>
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <span>{post.timestamp}</span>
+                <Tooltip>
+                    <TooltipTrigger>
+                        <PrivacyIcon className="h-3 w-3" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>{post.privacy}</p>
+                    </TooltipContent>
+                </Tooltip>
+              </div>
             </div>
           </div>
           {!isOverlay && (
@@ -163,7 +180,7 @@ export default function Post({ post, isOverlay = false }: PostProps) {
                 <div className="flex gap-2">
                   {reactions.map(reaction => (
                     <Reaction key={reaction.name} onClick={() => handleReactionSelect(reaction.name)} name={reaction.name}>
-                        <Image src={reaction.icon} alt={reaction.name} width={40} height={40} />
+                        <Image src={reaction.icon} alt={reaction.name} width={40} height={40} unoptimized />
                     </Reaction>
                   ))}
                 </div>
