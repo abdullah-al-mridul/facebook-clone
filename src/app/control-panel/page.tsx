@@ -95,7 +95,7 @@ export default function ControlPanelPage() {
                 <h1 className="text-3xl font-bold">Control Panel</h1>
                 <p className="text-muted-foreground">Manage your social media platform.</p>
             </div>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2">
                 <ControlPanelCard 
                     title="User Management" 
                     description="View, edit, and manage all users on the platform." 
@@ -112,6 +112,12 @@ export default function ControlPanelPage() {
                     title="Site Analytics" 
                     description="Monitor key metrics like user growth and engagement." 
                     icon={BarChart3}
+                    href="#"
+                />
+                <ControlPanelCard 
+                    title="Security Settings" 
+                    description="Configure authentication, access control, and other security features." 
+                    icon={Shield}
                     href="#"
                 />
             </div>
