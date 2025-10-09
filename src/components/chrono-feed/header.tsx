@@ -17,7 +17,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent
 } from "@/components/ui/dropdown-menu"
-import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
+import { Sheet, SheetTrigger, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import LeftSidebar from './left-sidebar';
 import { useTheme } from 'next-themes';
 
@@ -48,6 +48,7 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
                 </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 w-full max-w-xs sm:max-w-sm">
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 <LeftSidebar />
             </SheetContent>
         </Sheet>
