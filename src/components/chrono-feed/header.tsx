@@ -47,13 +47,13 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
                     <Menu />
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="p-0 w-72 lg:hidden">
+            <SheetContent side="left" className="p-0 w-full max-w-xs sm:max-w-sm">
                 <LeftSidebar />
             </SheetContent>
         </Sheet>
         <Link href="/" className="text-2xl font-bold text-primary">
           <span className="hidden sm:inline">Facemusk</span>
-          <span className="sm:hidden">F</span>
+          <span className="sm:hidden text-3xl">F</span>
         </Link>
       </div>
       
@@ -65,15 +65,15 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
       </nav>
 
       <div className="flex items-center gap-1 sm:gap-2">
-        <Button variant="ghost" size="icon" className="rounded-full bg-accent hover:bg-accent/80" onClick={onMessagesClick}>
-          <MessageCircle />
+        <Button variant="ghost" size="icon" className="rounded-full bg-accent hover:bg-accent/80 h-9 w-9 sm:h-10 sm:w-10" onClick={onMessagesClick}>
+          <MessageCircle className="h-5 w-5"/>
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full bg-accent hover:bg-accent/80" onClick={onNotificationsClick}>
-          <Bell />
+        <Button variant="ghost" size="icon" className="rounded-full bg-accent hover:bg-accent/80 h-9 w-9 sm:h-10 sm:w-10" onClick={onNotificationsClick}>
+          <Bell className="h-5 w-5"/>
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Avatar className="cursor-pointer h-10 w-10">
+            <Avatar className="cursor-pointer h-9 w-9 sm:h-10 sm:w-10">
               <AvatarImage src="https://placehold.co/40x40.png" alt="User" data-ai-hint="profile person" />
               <AvatarFallback>U</AvatarFallback>
             </Avatar>

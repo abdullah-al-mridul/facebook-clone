@@ -44,6 +44,11 @@ const initialMessages: Message[] = [
     { id: 8, sender: 'me', text: "Looking forward to it!" },
     { id: 9, sender: 'other', text: "By the way, did you see the latest design mockups?", avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' },
     { id: 10, sender: 'me', text: "Not yet, I'll check them out now. Thanks for the heads up!" },
+    { id: 11, sender: 'other', text: "No problem. They are in the shared folder.", avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' },
+    { id: 12, sender: 'me', text: "Got it. I'll take a look and give you some feedback soon." },
+    { id: 13, sender: 'other', text: "Great, thanks!", avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' },
+    { id: 14, sender: 'me', text: "Talk to you later!" },
+    { id: 15, sender: 'other', text: "Bye!", avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' },
 ];
 
 const olderMessages: Message[] = Array.from({ length: 15 }).map((_, i) => ({
@@ -346,11 +351,11 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                 </Button>
             </div>
          )}
-         <div className="flex items-center w-full gap-2">
+         <div className="flex items-center w-full gap-1">
             {!isRecording && !inputValue && !audioPreview && (
               <>
                 <input type="file" ref={imageInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" multiple/>
-                <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => imageInputRef.current?.click()}>
+                <Button variant="ghost" size="icon" className="h-9 w-9 shrink-0" onClick={() => imageInputRef.current?.click()}>
                     <ImageIcon className="h-5 w-5 text-primary"/>
                 </Button>
               </>
@@ -383,7 +388,7 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                  </div>
             </div>
             { (inputValue || imagePreviews.length > 0 || audioPreview) &&
-                <Button variant="ghost" size="icon" className="h-9 w-9" onClick={handleSendMessage}>
+                <Button variant="ghost" size="icon" className="h-9 w-9 shrink-0" onClick={handleSendMessage}>
                     <Send className="h-5 w-5 text-primary"/>
                 </Button>
             }
@@ -392,5 +397,3 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
     </Card>
   );
 }
-
-    

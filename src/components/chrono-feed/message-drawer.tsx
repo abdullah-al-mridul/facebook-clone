@@ -68,7 +68,7 @@ type MessageDrawerProps = {
 export default function MessageDrawer({ isOpen, onOpenChange, onUserSelect }: MessageDrawerProps) {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:w-[400px] p-4 flex flex-col">
+      <SheetContent className="w-full max-w-md sm:w-[400px] p-4 flex flex-col">
         <SheetHeader>
           <SheetTitle className="text-2xl font-bold">Chats</SheetTitle>
         </SheetHeader>

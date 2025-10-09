@@ -39,8 +39,8 @@ export default function LoginPage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 dark:bg-zinc-900 p-4">
         <div className="w-full max-w-md">
             <div className="text-center mb-8">
-                <h1 className="text-5xl font-bold text-primary mb-2">Facemusk</h1>
-                <p className="text-xl text-foreground">Connect with friends and the world around you on Facemusk.</p>
+                <h1 className="text-4xl sm:text-5xl font-bold text-primary mb-2">Facemusk</h1>
+                <p className="text-lg sm:text-xl text-foreground">Connect with friends and the world around you on Facemusk.</p>
             </div>
             <Card className="shadow-2xl">
                 <CardContent className="p-6">
@@ -83,7 +83,7 @@ export default function LoginPage() {
                 </CardContent>
                 <CardFooter className="flex justify-center p-6 border-t">
                      <Link href="/register">
-                        <Button variant="secondary" className="bg-green-600 hover:bg-green-700 text-white font-bold py-6 px-6 text-lg">
+                        <Button variant="secondary" className="bg-green-600 hover:bg-green-700 text-white font-bold py-6 px-4 sm:px-6 text-base sm:text-lg">
                             Create new account
                         </Button>
                      </Link>

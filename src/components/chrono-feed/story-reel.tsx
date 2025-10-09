@@ -93,14 +93,14 @@ export default function StoryReel() {
                 className="w-full"
             >
                 <CarouselContent className="-ml-2">
-                    <CarouselItem className="pl-2 basis-1/4 sm:basis-1/4 md:basis-1/5">
-                         <div className="h-56">
+                    <CarouselItem className="pl-2 basis-1/3 sm:basis-1/4 md:basis-1/5">
+                         <div className="h-48 sm:h-56">
                             <StoryCard isCreate onOpenCreate={() => setIsCreateOpen(true)}/>
                          </div>
                     </CarouselItem>
                     {dummyStories.map((story, index) => (
-                        <CarouselItem key={story.id} className="pl-2 basis-1/4 sm:basis-1/4 md:basis-1/5">
-                             <div className="h-56">
+                        <CarouselItem key={story.id} className="pl-2 basis-1/3 sm:basis-1/4 md:basis-1/5">
+                             <div className="h-48 sm:h-56">
                                 <StoryCard 
                                     story={story} 
                                     onViewStory={() => handleViewStory(index)}
@@ -109,8 +109,8 @@ export default function StoryReel() {
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-                {canScrollPrev && <CarouselPrevious className="ml-10" />}
-                {canScrollNext && <CarouselNext className="mr-10" />}
+                {canScrollPrev && <CarouselPrevious className="ml-10 hidden sm:flex" />}
+                {canScrollNext && <CarouselNext className="mr-10 hidden sm:flex" />}
             </Carousel>
             <CreateStoryDialog isOpen={isCreateOpen} onOpenChange={setIsCreateOpen} />
             {viewingStoryIndex !== null && (

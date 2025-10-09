@@ -64,15 +64,15 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 dark:bg-zinc-900 p-4">
       <div className="text-center mb-4">
-        <h1 className="text-5xl font-bold text-primary">Facemusk</h1>
+        <h1 className="text-4xl sm:text-5xl font-bold text-primary">Facemusk</h1>
       </div>
       <Card className="w-full max-w-lg shadow-2xl">
         <CardHeader className='text-center'>
-          <CardTitle className="text-3xl font-bold">Create a new account</CardTitle>
+          <CardTitle className="text-2xl sm:text-3xl font-bold">Create a new account</CardTitle>
           <CardDescription>It’s quick and easy.</CardDescription>
         </CardHeader>
         <Separator />
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">

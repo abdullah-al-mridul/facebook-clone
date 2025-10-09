@@ -128,7 +128,7 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
       <input type="file" ref={coverInputRef} onChange={(e) => handleFileChange(e, 16/9, onCoverSave)} accept="image/*" className="hidden" />
       <input type="file" ref={profileInputRef} onChange={(e) => handleFileChange(e, 1, onProfileSave)} accept="image/*" className="hidden" />
 
-      <div className="relative h-64 md:h-96 w-full">
+      <div className="relative h-48 sm:h-64 md:h-96 w-full">
         <Image 
             src={newCoverPreview || coverImage}
             alt="Cover photo"
@@ -140,19 +140,19 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
         <div className="absolute bottom-4 right-4 flex gap-2">
            {newCoverPreview ? (
                 <>
-                    <Button variant="secondary" onClick={handleDiscardCover}>
-                        <X className="mr-2 h-4 w-4" />
+                    <Button variant="secondary" size="sm" onClick={handleDiscardCover}>
+                        <X className="mr-1 sm:mr-2 h-4 w-4" />
                         Discard
                     </Button>
-                    <Button onClick={handleSaveCover}>
-                        <Check className="mr-2 h-4 w-4" />
+                    <Button size="sm" onClick={handleSaveCover}>
+                        <Check className="mr-1 sm:mr-2 h-4 w-4" />
                         Save
                     </Button>
                 </>
             ) : (
-                <Button onClick={() => coverInputRef.current?.click()}>
-                    <Camera className="mr-2 h-4 w-4" />
-                    Edit cover photo
+                <Button size="sm" onClick={() => coverInputRef.current?.click()}>
+                    <Camera className="mr-1 sm:mr-2 h-4 w-4" />
+                    Edit cover
                 </Button>
             )}
         </div>
@@ -160,12 +160,12 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
       <div className="p-4">
         <div className="flex flex-col md:flex-row items-center md:items-end -mt-20 md:-mt-24 ml-0 md:ml-8">
             <div className="relative group">
-                 <Avatar className="h-40 w-40 border-4 border-card">
+                 <Avatar className="h-32 w-32 sm:h-40 sm:w-40 border-4 border-card">
                     <AvatarImage src={newProfilePreview || profileImage} alt="User" data-ai-hint="profile person"/>
                     <AvatarFallback>U</AvatarFallback>
                 </Avatar>
-                <Button size="icon" className="absolute bottom-2 right-2 rounded-full" onClick={() => profileInputRef.current?.click()}>
-                    <Camera className="h-5 w-5" />
+                <Button size="icon" className="absolute bottom-2 right-2 rounded-full h-8 w-8 sm:h-10 sm:w-10" onClick={() => profileInputRef.current?.click()}>
+                    <Camera className="h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>
             </div>
             <div className="flex-1 mt-4 md:mt-0 md:ml-6 text-center md:text-left">
@@ -183,7 +183,7 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
                 ) : (
                     <>
                     <div className="flex items-center justify-center md:justify-start gap-2">
-                        <h1 className="text-3xl font-bold">{currentUser.name}</h1>
+                        <h1 className="text-2xl sm:text-3xl font-bold">{currentUser.name}</h1>
                         {currentUser.isVerified && <VerifiedBadge size="lg" />}
                     </div>
                     <p className="text-muted-foreground">{currentUser.friendCount} Friends</p>
@@ -192,12 +192,12 @@ export default function ProfileHeader({ activeTab, onTabChange }: ProfileHeaderP
             </div>
             <div className="mt-4 md:mt-0 flex items-center gap-2">
                 <Link href="/verify">
-                    <Button variant="secondary">
+                    <Button variant="secondary" size="sm">
                         <ShieldCheck className="mr-2 h-4 w-4" />
                         Get Verified
                     </Button>
                 </Link>
-                <Button onClick={() => setIsEditDialogOpen(true)}>
+                <Button size="sm" onClick={() => setIsEditDialogOpen(true)}>
                     <Pencil className="mr-2 h-4 w-4" />
                     Edit profile
                 </Button>
