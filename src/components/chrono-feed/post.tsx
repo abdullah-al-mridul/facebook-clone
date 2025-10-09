@@ -123,22 +123,22 @@ export default function Post({ post, isOverlay = false }: PostProps) {
               <PopoverContent className="w-auto bg-card p-2 rounded-full">
                 <div className="flex gap-2">
                   <Reaction onClick={() => handleReaction('Like')}>
-                    <Image src="/like.gif" alt="like" width={40} height={40} unoptimized />
+                    <Image src="/like.png" alt="like" width={40} height={40} />
                   </Reaction>
                   <Reaction onClick={() => handleReaction('Love')}>
-                     <Image src="/love.gif" alt="love" width={40} height={40} unoptimized />
+                     <Image src="/love.png" alt="love" width={40} height={40} />
                   </Reaction>
                   <Reaction onClick={() => handleReaction('Haha')}>
-                     <Image src="/haha.gif" alt="haha" width={40} height={40} unoptimized />
+                     <Image src="/haha.png" alt="haha" width={40} height={40} />
                   </Reaction>
                   <Reaction onClick={() => handleReaction('Wow')}>
-                     <Image src="/wow.gif" alt="wow" width={40} height={40} unoptimized />
+                     <Image src="/wow.png" alt="wow" width={40} height={40} />
                   </Reaction>
                   <Reaction onClick={() => handleReaction('Sad')}>
-                     <Image src="/sad.gif" alt="sad" width={40} height={40} unoptimized />
+                     <Image src="/sad.png" alt="sad" width={40} height={40} />
                   </Reaction>
                    <Reaction onClick={() => handleReaction('Angry')}>
-                     <Image src="/angry.gif" alt="angry" width={40} height={40} unoptimized />
+                     <Image src="/angry.png" alt="angry" width={40} height={40} />
                   </Reaction>
                 </div>
               </PopoverContent>
