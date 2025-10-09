@@ -7,8 +7,8 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { User } from "@/types";
-import { Minus, Send, X, Image as ImageIcon, Mic, Square, Trash2, Smile, Phone, Video } from "lucide-react";
-import { useState, useRef, ChangeEvent, useEffect } from "react";
+import { Minus, Send, X, Image as ImageIcon, Mic, Square, Trash2, Smile, Phone, Video, Loader2 } from "lucide-react";
+import { useState, useRef, ChangeEvent, useEffect, useCallback } from "react";
 import Image from 'next/image';
 import VerifiedBadge from "./verified-badge";
 import Link from "next/link";
@@ -40,6 +40,12 @@ const initialMessages: Message[] = [
     { id: 4, sender: 'me', text: "Awesome! Let's catch up later." },
 ];
 
+const olderMessages: Message[] = Array.from({ length: 5 }).map((_, i) => ({
+    id: -(i + 1),
+    sender: i % 2 === 0 ? 'me' : 'other',
+    text: `This is an older message ${i + 1}`,
+}));
+
 export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages.map(m => m.sender === 'other' ? {...m, avatarUrl: user.avatarUrl} : m));
   const [inputValue, setInputValue] = useState('');
@@ -51,15 +57,54 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
   const { toast } = useToast();
 
+  const loadMoreMessages = useCallback(() => {
+    if (isLoadingMore) return;
+    
+    setIsLoadingMore(true);
+    setTimeout(() => {
+      const newMessages = olderMessages.map(m => ({
+          ...m,
+          id: m.id - messages.length,
+          avatarUrl: m.sender === 'other' ? user.avatarUrl : undefined,
+      }));
+      setMessages(prev => [...newMessages, ...prev]);
+      setHasMore(messages.length < 20); // Simulate running out of messages
+      setIsLoadingMore(false);
+    }, 1500);
+  }, [isLoadingMore, messages.length, user.avatarUrl]);
+
   useEffect(() => {
-    if (scrollAreaRef.current) {
-        scrollAreaRef.current.scrollTo({ top: scrollAreaRef.current.scrollHeight });
+    const viewport = viewportRef.current;
+    const handleScroll = () => {
+        if (viewport && viewport.scrollTop === 0 && hasMore && !isLoadingMore) {
+            loadMoreMessages();
+        }
     }
-  }, [messages])
+    if (viewport) {
+        viewport.addEventListener('scroll', handleScroll);
+    }
+    return () => {
+        if (viewport) {
+            viewport.removeEventListener('scroll', handleScroll);
+        }
+    }
+  }, [hasMore, isLoadingMore, loadMoreMessages]);
+
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (viewport) {
+        // Scroll to bottom on initial load
+        viewport.scrollTop = viewport.scrollHeight;
+    }
+  }, []);
 
   const handleSendMessage = () => {
     const text = inputValue.trim();
@@ -81,6 +126,13 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
     if (imageInputRef.current) {
         imageInputRef.current.value = '';
     }
+
+    setTimeout(() => {
+        const viewport = viewportRef.current;
+        if (viewport) {
+            viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'smooth' });
+        }
+    }, 100);
   }
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -191,8 +243,13 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
         </div>
       </CardHeader>
       <CardContent className="flex-1 p-2 overflow-y-auto bg-background">
-        <ScrollArea className="h-full pr-2" ref={scrollAreaRef}>
+        <ScrollArea className="h-full pr-2" ref={scrollAreaRef} viewportRef={viewportRef}>
             <div className="space-y-4">
+                {isLoadingMore && (
+                    <div className="flex justify-center items-center py-2">
+                        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                    </div>
+                )}
                 {messages.map((message) => (
                     <div key={message.id} className={`flex items-end gap-2 ${message.sender === 'me' ? 'justify-end' : ''}`}>
                          {message.sender === 'other' && (
