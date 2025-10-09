@@ -38,11 +38,17 @@ const initialMessages: Message[] = [
     { id: 2, sender: 'me', text: "Pretty good! Just working on this project. You?" },
     { id: 3, sender: 'other', text: "Same here. It's coming along nicely!", avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' },
     { id: 4, sender: 'me', text: "Awesome! Let's catch up later." },
+    { id: 5, sender: 'other', text: "Definitely. I have a few ideas to share.", avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' },
+    { id: 6, sender: 'me', text: "Great! I'm free after 5 PM today." },
+    { id: 7, sender: 'other', text: "Perfect, talk to you then!", avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' },
+    { id: 8, sender: 'me', text: "Looking forward to it!" },
+    { id: 9, sender: 'other', text: "By the way, did you see the latest design mockups?", avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' },
+    { id: 10, sender: 'me', text: "Not yet, I'll check them out now. Thanks for the heads up!" },
 ];
 
-const olderMessages: Message[] = Array.from({ length: 5 }).map((_, i) => ({
+const olderMessages: Message[] = Array.from({ length: 15 }).map((_, i) => ({
     id: -(i + 1),
-    sender: i % 2 === 0 ? 'me' : 'other',
+    sender: i % 2 === 0 ? 'other' : 'me',
     text: `This is an older message ${i + 1}`,
 }));
 
@@ -69,16 +75,25 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
     
     setIsLoadingMore(true);
     setTimeout(() => {
-      const newMessages = olderMessages.map(m => ({
-          ...m,
-          id: m.id - messages.length,
-          avatarUrl: m.sender === 'other' ? user.avatarUrl : undefined,
-      }));
-      setMessages(prev => [...newMessages, ...prev]);
-      setHasMore(messages.length < 20); // Simulate running out of messages
+      const currentOldestMessageId = Math.min(...messages.filter(m => m.id < 0).map(m => m.id), 0);
+      
+      const newMessages = olderMessages
+        .filter(m => !messages.find(existing => existing.id === m.id))
+        .slice(0, 5)
+        .map((m, i) => ({
+            ...m,
+            id: currentOldestMessageId - i -1,
+            avatarUrl: m.sender === 'other' ? user.avatarUrl : undefined,
+        }));
+
+      if (newMessages.length > 0) {
+        setMessages(prev => [...newMessages, ...prev]);
+      } else {
+        setHasMore(false);
+      }
       setIsLoadingMore(false);
     }, 1500);
-  }, [isLoadingMore, messages.length, user.avatarUrl]);
+  }, [isLoadingMore, messages, user.avatarUrl]);
 
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -248,6 +263,11 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                 {isLoadingMore && (
                     <div className="flex justify-center items-center py-2">
                         <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                    </div>
+                )}
+                {!hasMore && (
+                     <div className="text-center text-xs text-muted-foreground py-2">
+                        No more messages
                     </div>
                 )}
                 {messages.map((message) => (
