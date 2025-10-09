@@ -1,47 +1,47 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import StoryCard from './story-card';
 import CreateStoryDialog from './create-story-dialog';
 import StoryViewer from './story-viewer';
 import { StoryType } from '@/types';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '../ui/carousel';
 
 const dummyStories: StoryType[] = [
     {
         id: 'story-1',
-        user: { name: 'Sarah Miller', avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png', isVerified: true },
+        user: { name: 'Sarah Miller', avatarUrl: 'https://picsum.photos/seed/story1/40/40', isVerified: true },
         imageUrl: 'https://picsum.photos/seed/story1/1080/1920',
         imageHint: 'vacation beach'
     },
     {
         id: 'story-2',
-        user: { name: 'Michael Chen', avatarUrl: 'https://placehold.co/40x40/9CA3AF/FFFFFF.png' },
+        user: { name: 'Michael Chen', avatarUrl: 'https://picsum.photos/seed/story2/40/40' },
         imageUrl: 'https://picsum.photos/seed/story2/1080/1920',
         imageHint: 'city skyline'
     },
     {
         id: 'story-3',
-        user: { name: 'Emily Davis', avatarUrl: 'https://placehold.co/40x40/F3F4F6/1F2937.png', isVerified: true },
+        user: { name: 'Emily Davis', avatarUrl: 'https://picsum.photos/seed/story3/40/40', isVerified: true },
         imageUrl: 'https://picsum.photos/seed/story3/1080/1920',
         imageHint: 'mountain hike'
     },
     {
         id: 'story-4',
-        user: { name: 'David Rodriguez', avatarUrl: 'https://placehold.co/40x40.png' },
+        user: { name: 'David Rodriguez', avatarUrl: 'https://picsum.photos/seed/story4/40/40' },
         imageUrl: 'https://picsum.photos/seed/story4/1080/1920',
         imageHint: 'food delicious'
     },
     {
         id: 'story-5',
-        user: { name: 'Jessica White', avatarUrl: 'https://placehold.co/40x40/D1D5DB/374151.png' },
+        user: { name: 'Jessica White', avatarUrl: 'https://picsum.photos/seed/story5/40/40' },
         imageUrl: 'https://picsum.photos/seed/story5/1080/1920',
         imageHint: 'concert music'
     },
     {
         id: 'story-6',
-        user: { name: 'Chris Lee', avatarUrl: 'https://placehold.co/40x40/4B5563/E5E7EB.png' },
+        user: { name: 'Chris Lee', avatarUrl: 'https://picsum.photos/seed/story6/40/40' },
         imageUrl: 'https://picsum.photos/seed/story6/1080/1920',
         imageHint: 'art museum'
     },
@@ -50,6 +50,29 @@ const dummyStories: StoryType[] = [
 export default function StoryReel() {
     const [isCreateOpen, setIsCreateOpen] = useState(false);
     const [viewingStoryIndex, setViewingStoryIndex] = useState<number | null>(null);
+    const [api, setApi] = useState<CarouselApi>()
+    const [canScrollPrev, setCanScrollPrev] = useState(false)
+    const [canScrollNext, setCanScrollNext] = useState(false)
+
+    useEffect(() => {
+        if (!api) {
+        return
+        }
+
+        setCanScrollPrev(api.canScrollPrev())
+        setCanScrollNext(api.canScrollNext())
+        
+        const onSelect = () => {
+            setCanScrollPrev(api.canScrollPrev())
+            setCanScrollNext(api.canScrollNext())
+        }
+        api.on("select", onSelect)
+
+        return () => {
+            api.off("select", onSelect);
+        }
+    }, [api])
+
 
     const handleViewStory = (index: number) => {
         setViewingStoryIndex(index);
@@ -62,6 +85,7 @@ export default function StoryReel() {
     return (
         <>
             <Carousel 
+                setApi={setApi}
                 opts={{
                     align: "start",
                     dragFree: true,
@@ -85,8 +109,8 @@ export default function StoryReel() {
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-                <CarouselPrevious className="ml-10" />
-                <CarouselNext className="mr-10" />
+                {canScrollPrev && <CarouselPrevious className="ml-10" />}
+                {canScrollNext && <CarouselNext className="mr-10" />}
             </Carousel>
             <CreateStoryDialog isOpen={isCreateOpen} onOpenChange={setIsCreateOpen} />
             {viewingStoryIndex !== null && (
