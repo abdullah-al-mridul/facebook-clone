@@ -1,4 +1,5 @@
 
+
 export type User = {
   name: string;
   avatarUrl: string;
@@ -18,6 +19,13 @@ export type PostAnalyticsType = {
   comments: number;
 };
 
+export type ReactionName = 'Like' | 'Love' | 'Haha' | 'Wow' | 'Sad' | 'Angry';
+
+export type ReactionType = {
+  user: User;
+  reaction: ReactionName;
+};
+
 export type PostType = {
   id: string;
   user: User;
@@ -30,6 +38,7 @@ export type PostType = {
   shares: number;
   commentData?: CommentType[];
   analytics?: PostAnalyticsType;
+  reactions?: ReactionType[];
 };
 
 export type StoryType = {

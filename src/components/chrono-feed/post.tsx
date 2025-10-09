@@ -1,4 +1,5 @@
 
+
 'use client';
 import Image from 'next/image';
 import type { PostType } from '@/types';
@@ -16,6 +17,7 @@ import Link from 'next/link';
 import PostAnalytics from './post-analytics';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import ReactionOverlay from './reaction-overlay';
 
 type PostProps = {
   post: PostType;
@@ -53,6 +55,7 @@ export default function Post({ post, isOverlay = false }: PostProps) {
   const [isCommentOverlayOpen, setIsCommentOverlayOpen] = useState(false);
   const [isShareOverlayOpen, setIsShareOverlayOpen] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [isReactionOverlayOpen, setIsReactionOverlayOpen] = useState(false);
 
   const handleReactionSelect = (reactionName: string) => {
     const reaction = reactions.find(r => r.name === reactionName);
@@ -118,7 +121,7 @@ export default function Post({ post, isOverlay = false }: PostProps) {
 
       <div className="px-4 pb-2">
         <div className="flex justify-between text-sm text-muted-foreground">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 cursor-pointer hover:underline" onClick={() => setIsReactionOverlayOpen(true)}>
             <ThumbsUp className="w-4 h-4 text-primary" />
             <span>{post.likes}</span>
           </div>
@@ -186,6 +189,7 @@ export default function Post({ post, isOverlay = false }: PostProps) {
     </PostWrapper>
     {!isOverlay && <CommentOverlay post={post} isOpen={isCommentOverlayOpen} onOpenChange={setIsCommentOverlayOpen} />}
     {!isOverlay && <ShareOverlay post={post} isOpen={isShareOverlayOpen} onOpenChange={setIsShareOverlayOpen} />}
+    {!isOverlay && <ReactionOverlay post={post} isOpen={isReactionOverlayOpen} onOpenChange={setIsReactionOverlayOpen} />}
     </>
   );
 }
