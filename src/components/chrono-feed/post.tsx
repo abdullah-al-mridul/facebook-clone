@@ -14,27 +14,51 @@ import ShareOverlay from './share-overlay';
 import VerifiedBadge from './verified-badge';
 import Link from 'next/link';
 import PostAnalytics from './post-analytics';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 
 type PostProps = {
   post: PostType;
   isOverlay?: boolean;
 };
 
-const Reaction = ({ children, onClick }: { children: React.ReactNode, onClick: () => void; }) => (
-  <div onClick={onClick} className="cursor-pointer transition-transform hover:scale-125">
-      {children}
-  </div>
+const reactions = [
+    { name: 'Like', icon: '/like.png' },
+    { name: 'Love', icon: '/love.png' },
+    { name: 'Haha', icon: '/haha.png' },
+    { name: 'Wow', icon: '/wow.png' },
+    { name: 'Sad', icon: '/sad.png' },
+    { name: 'Angry', icon: '/angry.png' },
+]
+
+const Reaction = ({ children, onClick, name }: { children: React.ReactNode, onClick: () => void; name: string }) => (
+    <Tooltip>
+        <TooltipTrigger asChild>
+            <div
+                onClick={onClick}
+                className="cursor-pointer transition-transform duration-200 ease-in-out hover:scale-125"
+            >
+                {children}
+            </div>
+        </TooltipTrigger>
+        <TooltipContent>
+            <p>{name}</p>
+        </TooltipContent>
+    </Tooltip>
 );
 
 export default function Post({ post, isOverlay = false }: PostProps) {
-  const [reaction, setReaction] = useState('Like');
+  const [selectedReaction, setSelectedReaction] = useState(reactions[0]);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [isCommentOverlayOpen, setIsCommentOverlayOpen] = useState(false);
   const [isShareOverlayOpen, setIsShareOverlayOpen] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
 
-  const handleReaction = (newReaction: string) => {
-    setReaction(newReaction);
+  const handleReactionSelect = (reactionName: string) => {
+    const reaction = reactions.find(r => r.name === reactionName);
+    if (reaction) {
+        setSelectedReaction(reaction);
+    }
     setIsPopoverOpen(false);
   }
   
@@ -116,30 +140,29 @@ export default function Post({ post, isOverlay = false }: PostProps) {
             <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
               <PopoverTrigger asChild>
                 <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground font-semibold">
-                  <ThumbsUp />
-                  {reaction}
+                    {selectedReaction.name === 'Like' ? (
+                        <ThumbsUp />
+                    ) : (
+                        <Image src={selectedReaction.icon} alt={selectedReaction.name} width={20} height={20} />
+                    )}
+                    <span className={cn(
+                        selectedReaction.name === 'Love' && 'text-red-500',
+                        selectedReaction.name === 'Haha' && 'text-yellow-500',
+                        selectedReaction.name === 'Wow' && 'text-yellow-500',
+                        selectedReaction.name === 'Sad' && 'text-yellow-500',
+                        selectedReaction.name === 'Angry' && 'text-orange-500',
+                    )}>
+                        {selectedReaction.name}
+                    </span>
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto bg-card p-2 rounded-full">
                 <div className="flex gap-2">
-                  <Reaction onClick={() => handleReaction('Like')}>
-                    <Image src="/like.png" alt="like" width={40} height={40} />
-                  </Reaction>
-                  <Reaction onClick={() => handleReaction('Love')}>
-                     <Image src="/love.png" alt="love" width={40} height={40} />
-                  </Reaction>
-                  <Reaction onClick={() => handleReaction('Haha')}>
-                     <Image src="/haha.png" alt="haha" width={40} height={40} />
-                  </Reaction>
-                  <Reaction onClick={() => handleReaction('Wow')}>
-                     <Image src="/wow.png" alt="wow" width={40} height={40} />
-                  </Reaction>
-                  <Reaction onClick={() => handleReaction('Sad')}>
-                     <Image src="/sad.png" alt="sad" width={40} height={40} />
-                  </Reaction>
-                   <Reaction onClick={() => handleReaction('Angry')}>
-                     <Image src="/angry.png" alt="angry" width={40} height={40} />
-                  </Reaction>
+                  {reactions.map(reaction => (
+                    <Reaction key={reaction.name} onClick={() => handleReactionSelect(reaction.name)} name={reaction.name}>
+                        <Image src={reaction.icon} alt={reaction.name} width={40} height={40} />
+                    </Reaction>
+                  ))}
                 </div>
               </PopoverContent>
             </Popover>
