@@ -27,7 +27,7 @@ export default function StoryViewer({ stories, startIndex, onClose }: StoryViewe
   
   return (
     <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="bg-black border-none p-0 max-w-md w-full h-full sm:h-auto sm:max-h-[95vh] sm:rounded-lg flex items-center justify-center">
+      <DialogContent className="bg-black border-none p-0 max-w-md w-full h-full sm:h-auto sm:max-h-[95vh] sm:aspect-[9/16] sm:rounded-lg flex items-center justify-center">
        <DialogTitle className="sr-only">Story Viewer</DialogTitle>
         <Carousel setApi={setApi} className="w-full h-full">
           <CarouselContent className="h-full">
@@ -38,7 +38,7 @@ export default function StoryViewer({ stories, startIndex, onClose }: StoryViewe
                         src={story.imageUrl}
                         alt={`Story by ${story.user.name}`}
                         fill
-                        className="object-contain"
+                        className="object-cover sm:rounded-lg"
                         data-ai-hint={story.imageHint}
                     />
                     <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/50 to-transparent">
