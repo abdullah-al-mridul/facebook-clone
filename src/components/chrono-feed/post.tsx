@@ -19,8 +19,10 @@ type PostProps = {
   isOverlay?: boolean;
 };
 
-const Reaction = ({ children }: { children: React.ReactNode }) => (
-  <span className="text-2xl cursor-pointer transition-transform hover:scale-125">{children}</span>
+const Reaction = ({ children, onClick }: { children: React.ReactNode, onClick: () => void; }) => (
+  <div onClick={onClick} className="cursor-pointer transition-transform hover:scale-125">
+      {children}
+  </div>
 );
 
 export default function Post({ post, isOverlay = false }: PostProps) {
@@ -119,12 +121,24 @@ export default function Post({ post, isOverlay = false }: PostProps) {
               </PopoverTrigger>
               <PopoverContent className="w-auto bg-card p-2 rounded-full">
                 <div className="flex gap-2">
-                  <Reaction><span onClick={() => handleReaction('👍 Like')}>👍</span></Reaction>
-                  <Reaction><span onClick={() => handleReaction('❤️ Love')}>❤️</span></Reaction>
-                  <Reaction><span onClick={() => handleReaction('😂 Haha')}>😂</span></Reaction>
-                  <Reaction><span onClick={() => handleReaction('😮 Wow')}>😮</span></Reaction>
-                  <Reaction><span onClick={() => handleReaction('😢 Sad')}>😢</span></Reaction>
-                  <Reaction><span onClick={() => handleReaction('😡 Angry')}>😡</span></Reaction>
+                  <Reaction onClick={() => handleReaction('Like')}>
+                    <Image src="https://picsum.photos/seed/like/40/40" alt="like" width={40} height={40} />
+                  </Reaction>
+                  <Reaction onClick={() => handleReaction('Love')}>
+                     <Image src="https://picsum.photos/seed/love/40/40" alt="love" width={40} height={40} />
+                  </Reaction>
+                  <Reaction onClick={() => handleReaction('Haha')}>
+                     <Image src="https://picsum.photos/seed/haha/40/40" alt="haha" width={40} height={40} />
+                  </Reaction>
+                  <Reaction onClick={() => handleReaction('Wow')}>
+                     <Image src="https://picsum.photos/seed/wow/40/40" alt="wow" width={40} height={40} />
+                  </Reaction>
+                  <Reaction onClick={() => handleReaction('Sad')}>
+                     <Image src="https://picsum.photos/seed/sad/40/40" alt="sad" width={40} height={40} />
+                  </Reaction>
+                   <Reaction onClick={() => handleReaction('Angry')}>
+                     <Image src="https://picsum.photos/seed/angry/40/40" alt="angry" width={40} height={40} />
+                  </Reaction>
                 </div>
               </PopoverContent>
             </Popover>
