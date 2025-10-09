@@ -1,3 +1,4 @@
+
 'use client';
 import Image from 'next/image';
 import type { PostType } from '@/types';
@@ -122,22 +123,22 @@ export default function Post({ post, isOverlay = false }: PostProps) {
               <PopoverContent className="w-auto bg-card p-2 rounded-full">
                 <div className="flex gap-2">
                   <Reaction onClick={() => handleReaction('Like')}>
-                    <Image src="https://picsum.photos/seed/like/40/40" alt="like" width={40} height={40} />
+                    <Image src="/like.gif" alt="like" width={40} height={40} unoptimized />
                   </Reaction>
                   <Reaction onClick={() => handleReaction('Love')}>
-                     <Image src="https://picsum.photos/seed/love/40/40" alt="love" width={40} height={40} />
+                     <Image src="/love.gif" alt="love" width={40} height={40} unoptimized />
                   </Reaction>
                   <Reaction onClick={() => handleReaction('Haha')}>
-                     <Image src="https://picsum.photos/seed/haha/40/40" alt="haha" width={40} height={40} />
+                     <Image src="/haha.gif" alt="haha" width={40} height={40} unoptimized />
                   </Reaction>
                   <Reaction onClick={() => handleReaction('Wow')}>
-                     <Image src="https://picsum.photos/seed/wow/40/40" alt="wow" width={40} height={40} />
+                     <Image src="/wow.gif" alt="wow" width={40} height={40} unoptimized />
                   </Reaction>
                   <Reaction onClick={() => handleReaction('Sad')}>
-                     <Image src="https://picsum.photos/seed/sad/40/40" alt="sad" width={40} height={40} />
+                     <Image src="/sad.gif" alt="sad" width={40} height={40} unoptimized />
                   </Reaction>
                    <Reaction onClick={() => handleReaction('Angry')}>
-                     <Image src="https://picsum.photos/seed/angry/40/40" alt="angry" width={40} height={40} />
+                     <Image src="/angry.gif" alt="angry" width={40} height={40} unoptimized />
                   </Reaction>
                 </div>
               </PopoverContent>
