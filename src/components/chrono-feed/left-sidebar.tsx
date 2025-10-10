@@ -1,7 +1,7 @@
 
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Users, UserSquare2, Bookmark, Clapperboard, History, Store, LayoutDashboard, Shield } from 'lucide-react';
+import { Users, UserSquare2, Bookmark, Clapperboard, History, Store, LayoutDashboard, Shield, MessageCircle } from 'lucide-react';
 
 const SidebarLink = ({ href, icon: Icon, text }: { href: string; icon: React.ElementType; text: string }) => (
   <Link href={href} className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
@@ -22,6 +22,7 @@ export default function LeftSidebar() {
           <span className="font-semibold">Current User</span>
         </Link>
         <SidebarLink href="/friends" icon={Users} text="Friends" />
+        <SidebarLink href="/messages" icon={MessageCircle} text="Messages" />
         <SidebarLink href="/groups" icon={UserSquare2} text="Groups" />
         <SidebarLink href="/dashboard" icon={LayoutDashboard} text="Professional Dashboard" />
         <SidebarLink href="/control-panel" icon={Shield} text="Control Panel" />
