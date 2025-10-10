@@ -16,6 +16,7 @@ import VerifiedBadge from '@/components/chrono-feed/verified-badge';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui/card';
+import FullPageChat from '@/components/chrono-feed/full-page-chat';
 
 type ChatWindowState = {
   user: User;
@@ -157,23 +158,22 @@ export default function MessagesPage() {
             </div>
 
             {/* Right Column - Chat View */}
-            <main className="flex-1 h-full flex items-center justify-center">
+            <main className="flex-1 h-full">
                 {selectedUser ? (
-                     <div className="h-full w-full">
-                        <Chatbox 
-                            user={selectedUser} 
-                            onClose={() => setSelectedUser(null)} 
-                            onMinimize={() => {
-                                handleUserSelect(selectedUser);
-                                setSelectedUser(null);
-                            }}
-                        />
-                     </div>
+                    <FullPageChat 
+                        user={selectedUser} 
+                        onMinimize={() => {
+                            handleUserSelect(selectedUser);
+                            setSelectedUser(null);
+                        }}
+                    />
                 ) : (
-                    <Card className="text-center p-8">
-                        <h2 className="text-xl font-semibold">Select a chat</h2>
-                        <p className="text-muted-foreground">Choose one of your existing conversations to start chatting.</p>
-                    </Card>
+                    <div className="h-full hidden md:flex items-center justify-center">
+                        <Card className="text-center p-8">
+                            <h2 className="text-xl font-semibold">Select a chat</h2>
+                            <p className="text-muted-foreground">Choose one of your existing conversations to start chatting.</p>
+                        </Card>
+                    </div>
                 )}
             </main>
         </div>

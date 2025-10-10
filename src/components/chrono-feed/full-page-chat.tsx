@@ -3,11 +3,10 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { User } from "@/types";
-import { Minus, Send, X, Image as ImageIcon, Mic, Square, Trash2, Smile, Phone, Video, Loader2 } from "lucide-react";
+import { Minus, Send, Image as ImageIcon, Mic, Square, Trash2, Smile, Phone, Video, Loader2 } from "lucide-react";
 import { useState, useRef, ChangeEvent, useEffect, useCallback } from "react";
 import Image from 'next/image';
 import VerifiedBadge from "./verified-badge";
@@ -18,9 +17,8 @@ import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useToast } from "@/hooks/use-toast";
 
-type ChatboxProps = {
+type FullPageChatProps = {
   user: User;
-  onClose: () => void;
   onMinimize: () => void;
 };
 
@@ -57,7 +55,7 @@ const olderMessages: Message[] = Array.from({ length: 15 }).map((_, i) => ({
     text: `This is an older message ${i + 1}`,
 }));
 
-export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
+export default function FullPageChat({ user, onMinimize }: FullPageChatProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages.map(m => m.sender === 'other' ? {...m, avatarUrl: user.avatarUrl} : m));
   const [inputValue, setInputValue] = useState('');
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -124,7 +122,7 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
         // Scroll to bottom on initial load
         viewport.scrollTop = viewport.scrollHeight;
     }
-  }, []);
+  }, [user]); // Rerun when user changes
 
   const handleSendMessage = () => {
     const text = inputValue.trim();
@@ -203,7 +201,7 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
         
         mediaRecorderRef.current.start();
         setIsRecording(true);
-    } catch (error) {
+    } catch (error) => {
         console.error("Error accessing microphone:", error);
     }
   };
@@ -239,11 +237,11 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
   };
 
   return (
-    <Card className="w-full sm:w-80 h-[450px] flex flex-col shadow-2xl rounded-t-lg sm:rounded-lg">
-      <CardHeader className="p-2 flex flex-row items-center justify-between border-b bg-card rounded-t-lg">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={onMinimize}>
+    <div className="h-full w-full flex flex-col bg-background">
+      <header className="p-2 flex flex-row items-center justify-between border-b">
+        <div className="flex items-center gap-2">
             <Link href="/profile">
-              <Avatar className="h-8 w-8">
+              <Avatar className="h-10 w-10">
                 <AvatarImage src={user.avatarUrl} alt={user.name} data-ai-hint="person portrait"/>
                 <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
               </Avatar>
@@ -256,15 +254,14 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
             </div>
         </div>
         <div className="flex items-center">
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleCallClick('audio')}><Phone /></Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleCallClick('video')}><Video /></Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onMinimize}><Minus/></Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onClose}><X/></Button>
+            <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => handleCallClick('audio')}><Phone /></Button>
+            <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => handleCallClick('video')}><Video /></Button>
+            <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onMinimize}><Minus/></Button>
         </div>
-      </CardHeader>
-      <CardContent className="flex-1 p-2 overflow-y-auto bg-background">
-        <ScrollArea className="h-full pr-2" ref={scrollAreaRef} viewportRef={viewportRef}>
-            <div className="space-y-4 p-2">
+      </header>
+      <div className="flex-1 p-4 overflow-y-auto">
+        <ScrollArea className="h-full pr-4" ref={scrollAreaRef} viewportRef={viewportRef}>
+            <div className="space-y-4">
                 {isLoadingMore && (
                     <div className="flex justify-center items-center py-2">
                         <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -287,9 +284,9 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                         )}
                         
                         <div className={cn(
-                            "rounded-lg max-w-[80%]",
+                            "rounded-lg max-w-[70%]",
                             (message.images && message.images.length > 0) ? 'min-w-[150px]' : '',
-                            (message.audioUrl && !message.text && !message.images) ? 'w-[70%]' : '',
+                            (message.audioUrl && !message.text && !message.images) ? 'w-[60%]' : '',
                             (message.images && message.images.length > 0) || message.audioUrl ? "p-1" : "p-2",
                             message.sender === 'me' ? 'bg-primary text-primary-foreground' : 'bg-accent'
                         )}>
@@ -322,11 +319,11 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                 ))}
             </div>
         </ScrollArea>
-      </CardContent>
-      <CardFooter className="p-2 border-t bg-card rounded-b-lg flex flex-col items-start gap-2">
+      </div>
+      <footer className="p-4 border-t flex flex-col items-start gap-2">
          {imagePreviews.length > 0 && (
             <div className="w-full p-2 bg-accent rounded-lg">
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-5 gap-2">
                   {imagePreviews.map((src, index) => (
                       <div key={index} className="relative aspect-square">
                           <Image src={src} alt="Image preview" fill className="rounded-md object-cover"/>
@@ -336,7 +333,7 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                               className="absolute -top-2 -right-2 h-5 w-5 rounded-full"
                               onClick={() => removeImagePreview(index)}
                           >
-                              <X className="h-3 w-3" />
+                              <Minus className="h-3 w-3" />
                           </Button>
                       </div>
                   ))}
@@ -351,11 +348,11 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                 </Button>
             </div>
          )}
-         <div className="flex items-center w-full gap-1">
+         <div className="flex items-center w-full gap-2">
             {!isRecording && !inputValue && !audioPreview && (
               <>
                 <input type="file" ref={imageInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" multiple/>
-                <Button variant="ghost" size="icon" className="h-9 w-9 shrink-0" onClick={() => imageInputRef.current?.click()}>
+                <Button variant="ghost" size="icon" className="h-10 w-10 shrink-0" onClick={() => imageInputRef.current?.click()}>
                     <ImageIcon className="h-5 w-5 text-primary"/>
                 </Button>
               </>
@@ -363,7 +360,7 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
             <div className="relative w-full">
                 <Input 
                     placeholder={isRecording ? "Recording..." : "Type a message..."} 
-                    className="pr-20 bg-accent rounded-full"
+                    className="pr-24 bg-accent rounded-full h-10"
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
@@ -372,7 +369,7 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                  <div className="absolute right-1 top-1/2 -translate-y-1/2 flex">
                     <Popover>
                         <PopoverTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <Button variant="ghost" size="icon" className="h-9 w-9">
                                 <Smile className="h-5 w-5 text-primary"/>
                             </Button>
                         </PopoverTrigger>
@@ -381,19 +378,19 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                         </PopoverContent>
                     </Popover>
                     {!inputValue && !audioPreview && (
-                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={toggleRecording}>
+                        <Button variant="ghost" size="icon" className="h-9 w-9" onClick={toggleRecording}>
                             {isRecording ? <Square className="h-5 w-5 text-red-500" /> : <Mic className="h-5 w-5 text-primary"/>}
                         </Button>
                     )}
                  </div>
             </div>
             { (inputValue || imagePreviews.length > 0 || audioPreview) &&
-                <Button variant="ghost" size="icon" className="h-9 w-9 shrink-0" onClick={handleSendMessage}>
+                <Button variant="ghost" size="icon" className="h-10 w-10 shrink-0" onClick={handleSendMessage}>
                     <Send className="h-5 w-5 text-primary"/>
                 </Button>
             }
         </div>
-      </CardFooter>
-    </Card>
+      </footer>
+    </div>
   );
 }
