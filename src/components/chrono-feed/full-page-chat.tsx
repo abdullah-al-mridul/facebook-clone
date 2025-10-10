@@ -201,7 +201,7 @@ export default function FullPageChat({ user, onMinimize }: FullPageChatProps) {
         
         mediaRecorderRef.current.start();
         setIsRecording(true);
-    } catch (error) => {
+    } catch (error) {
         console.error("Error accessing microphone:", error);
     }
   };
