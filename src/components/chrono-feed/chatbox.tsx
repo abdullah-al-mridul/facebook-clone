@@ -38,7 +38,7 @@ const initialMessages: Message[] = [
     { id: 11, sender: 'other', text: "No problem. They are in the shared folder.", avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' },
     { id: 12, sender: 'me', text: "Got it. I'll take a look and give you some feedback soon." },
     { id: 13, sender: 'other', text: "Great, thanks!", avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' },
-    { id: 14, sender: 'me', text: "Talk to you later!" },
+    { id: 14, sender: 'me', text: "Talk to you later!", isSeen: true },
     { id: 15, sender: 'other', text: "Bye!", avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' },
 ];
 
@@ -268,7 +268,7 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                     </div>
                 )}
                 {messages.map((message) => (
-                    <div key={message.id} className="flex flex-col">
+                    <div key={message.id}>
                         <div className={cn('flex items-end gap-2', message.sender === 'me' ? 'justify-end' : 'justify-start')}>
                              {message.sender === 'other' && (
                                 <Link href="/profile">
@@ -312,8 +312,8 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                                 }
                             </div>
                         </div>
-                        {message.sender === 'me' && lastSeenMessageId === message.id && (
-                             <div className="flex justify-end pr-8 mt-1">
+                        {message.sender === 'me' && message.isSeen && (
+                             <div className="flex justify-end mt-1">
                                 <Avatar className="h-4 w-4">
                                     <AvatarImage src={user.avatarUrl} alt={user.name} />
                                     <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
@@ -399,3 +399,5 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
     </Card>
   );
 }
+
+    
