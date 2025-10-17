@@ -18,6 +18,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { cn } from '@/lib/utils';
 import ReactionOverlay from './reaction-overlay';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import ReportPostDialog from './report-post-dialog';
 
 type PostProps = {
   post: PostType;
@@ -60,6 +61,7 @@ export default function Post({ post, isOverlay = false }: PostProps) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [isCommentOverlayOpen, setIsCommentOverlayOpen] = useState(false);
   const [isShareOverlayOpen, setIsShareOverlayOpen] = useState(false);
+  const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [isReactionOverlayOpen, setIsReactionOverlayOpen] = useState(false);
 
@@ -129,7 +131,7 @@ export default function Post({ post, isOverlay = false }: PostProps) {
                       Edit Post
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => setIsReportDialogOpen(true)}>
                       <Flag className="mr-2 h-4 w-4" />
                       Report Post
                     </DropdownMenuItem>
@@ -230,6 +232,7 @@ export default function Post({ post, isOverlay = false }: PostProps) {
     {!isOverlay && <CommentOverlay post={post} isOpen={isCommentOverlayOpen} onOpenChange={setIsCommentOverlayOpen} />}
     {!isOverlay && <ShareOverlay post={post} isOpen={isShareOverlayOpen} onOpenChange={setIsShareOverlayOpen} />}
     {!isOverlay && <ReactionOverlay post={post} isOpen={isReactionOverlayOpen} onOpenChange={setIsReactionOverlayOpen} />}
+    {!isOverlay && <ReportPostDialog post={post} isOpen={isReportDialogOpen} onOpenChange={setIsReportDialogOpen} />}
     </>
   );
 }
