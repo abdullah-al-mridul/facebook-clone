@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { MessageSquare, MoreHorizontal, Share2, ThumbsUp, Eye, BarChart2, Globe, Users, Lock, Bookmark, Pencil, Trash2 } from 'lucide-react';
+import { MessageSquare, MoreHorizontal, Share2, ThumbsUp, Eye, BarChart2, Globe, Users, Lock, Bookmark, Pencil, Trash2, Flag } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useState } from 'react';
 import CommentOverlay from './comment-overlay';
@@ -17,7 +17,7 @@ import PostAnalytics from './post-analytics';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import ReactionOverlay from './reaction-overlay';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
 type PostProps = {
   post: PostType;
@@ -128,7 +128,12 @@ export default function Post({ post, isOverlay = false }: PostProps) {
                       <Pencil className="mr-2 h-4 w-4" />
                       Edit Post
                     </DropdownMenuItem>
-                     <DropdownMenuItem className="text-destructive">
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <Flag className="mr-2 h-4 w-4" />
+                      Report Post
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="text-destructive">
                       <Trash2 className="mr-2 h-4 w-4" />
                       Delete Post
                     </DropdownMenuItem>
@@ -228,5 +233,3 @@ export default function Post({ post, isOverlay = false }: PostProps) {
     </>
   );
 }
-
-    
