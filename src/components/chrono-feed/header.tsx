@@ -2,7 +2,7 @@
 "use client";
 
 import { usePathname } from 'next/navigation';
-import { Bell, Home, MessageCircle, Store, Users, Clapperboard, Menu, Moon, Sun, Laptop } from 'lucide-react';
+import { Bell, Home, MessageCircle, Store, Users, Clapperboard, Menu, Moon, Sun, Laptop, Settings, HelpCircle, SunMoon, MessageSquareWarning, LogOut, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -14,12 +14,15 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSub,
   DropdownMenuSubTrigger,
-  DropdownMenuSubContent
+  DropdownMenuSubContent,
+  DropdownMenuGroup
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetTrigger, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import LeftSidebar from './left-sidebar';
 import { useTheme } from 'next-themes';
 import Link from '@/components/ui/link';
+import { Card } from '../ui/card';
+import VerifiedBadge from './verified-badge';
 
 
 const NavLink = ({ href, icon: Icon, active = false }: { href: string, icon: React.ElementType, active?: boolean }) => {
@@ -83,33 +86,71 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
               <AvatarFallback>U</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <Link href="/profile">
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-            </Link>
-             <Link href="/settings">
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-             </Link>
-             <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
-                    Theme
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent>
-                    <DropdownMenuItem onClick={() => setTheme('light')}>
-                        <Sun className="mr-2" /> Light
+          <DropdownMenuContent align="end" className="w-80">
+             <DropdownMenuGroup>
+                <Link href="/profile">
+                    <Card className="m-2 shadow-lg">
+                        <DropdownMenuItem className="p-2">
+                             <Avatar className="h-10 w-10 mr-3">
+                                <AvatarImage src="https://placehold.co/40x40.png" alt="User" data-ai-hint="profile person"/>
+                                <AvatarFallback>U</AvatarFallback>
+                            </Avatar>
+                            <div className='flex items-center gap-2'>
+                                <span className='font-bold'>Current User</span>
+                                <VerifiedBadge />
+                            </div>
+                        </DropdownMenuItem>
+                    </Card>
+                </Link>
+                 <DropdownMenuSeparator />
+                  <Link href="/settings">
+                    <DropdownMenuItem>
+                      <div className="h-9 w-9 rounded-full bg-accent flex items-center justify-center">
+                        <Settings />
+                      </div>
+                      <span className='ml-2'>Settings &amp; privacy</span>
+                      <ChevronRight className="ml-auto" />
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setTheme('dark')}>
-                        <Moon className="mr-2" /> Dark
+                  </Link>
+                   <DropdownMenuItem>
+                      <div className="h-9 w-9 rounded-full bg-accent flex items-center justify-center">
+                        <HelpCircle />
+                      </div>
+                      <span className='ml-2'>Help &amp; support</span>
+                      <ChevronRight className="ml-auto" />
                     </DropdownMenuItem>
-                     <DropdownMenuItem onClick={() => setTheme('system')}>
-                        <Laptop className="mr-2" /> System
+                 <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                        <div className="h-9 w-9 rounded-full bg-accent flex items-center justify-center">
+                            <SunMoon />
+                        </div>
+                        <span className='ml-2'>Display &amp; accessibility</span>
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent>
+                        <DropdownMenuItem onClick={() => setTheme('light')}>
+                            <Sun className="mr-2" /> Light
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setTheme('dark')}>
+                            <Moon className="mr-2" /> Dark
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setTheme('system')}>
+                            <Laptop className="mr-2" /> System
+                        </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                </DropdownMenuSub>
+                 <DropdownMenuItem>
+                      <div className="h-9 w-9 rounded-full bg-accent flex items-center justify-center">
+                        <MessageSquareWarning />
+                      </div>
+                      <span className='ml-2'>Give feedback</span>
                     </DropdownMenuItem>
-                </DropdownMenuSubContent>
-            </DropdownMenuSub>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Log out</DropdownMenuItem>
+                <DropdownMenuItem>
+                    <div className="h-9 w-9 rounded-full bg-accent flex items-center justify-center">
+                        <LogOut />
+                    </div>
+                  <span className="ml-2">Log Out</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
