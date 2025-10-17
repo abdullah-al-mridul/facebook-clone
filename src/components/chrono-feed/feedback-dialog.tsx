@@ -1,6 +1,7 @@
 
 'use client';
 
+import * as React from 'react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -28,24 +29,25 @@ export default function FeedbackDialog({ isOpen, onOpenChange }: FeedbackDialogP
   const [feedbackText, setFeedbackText] = useState('');
   const [isCapturing, setIsCapturing] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [showDialog, setShowDialog] = useState(isOpen);
   const { toast } = useToast();
+
+  React.useEffect(() => {
+    setShowDialog(isOpen);
+  }, [isOpen]);
 
   const handleTakeScreenshot = async () => {
     setIsCapturing(true);
-    const dialogElement = document.querySelector('[data-feedback-dialog]');
-    const dialogOverlay = dialogElement?.closest('[role="dialog"]')?.parentElement;
-
-    if (dialogOverlay) {
-      dialogOverlay.style.display = 'none';
-    }
+    setShowDialog(false);
 
     // A short delay to allow the DOM to update
-    await new Promise(resolve => setTimeout(resolve, 50));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     try {
       const canvas = await html2canvas(document.body, {
         logging: false,
         useCORS: true,
+        backgroundColor: null,
       });
       setScreenshot(canvas.toDataURL('image/png'));
     } catch (error) {
@@ -56,9 +58,7 @@ export default function FeedbackDialog({ isOpen, onOpenChange }: FeedbackDialogP
         description: 'Could not capture the screen. Please try again.',
       });
     } finally {
-        if (dialogOverlay) {
-          dialogOverlay.style.display = '';
-        }
+        setShowDialog(true);
         setIsCapturing(false);
     }
   };
@@ -103,7 +103,7 @@ export default function FeedbackDialog({ isOpen, onOpenChange }: FeedbackDialogP
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog open={showDialog && isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md" data-feedback-dialog>
         <DialogHeader>
           <DialogTitle>Give feedback</DialogTitle>
