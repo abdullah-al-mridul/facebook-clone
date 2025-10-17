@@ -58,6 +58,7 @@ export type Message = {
     images?: string[];
     audioUrl?: string;
     avatarUrl?: string;
+    isSeen?: boolean;
 }
 
     

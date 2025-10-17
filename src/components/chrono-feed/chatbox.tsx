@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { User } from "@/types";
+import { User, Message } from "@/types";
 import { Minus, Send, X, Image as ImageIcon, Mic, Square, Trash2, Smile, Phone, Video, Loader2 } from "lucide-react";
 import { useState, useRef, ChangeEvent, useEffect, useCallback } from "react";
 import Image from 'next/image';
@@ -23,15 +23,6 @@ type ChatboxProps = {
   onClose: () => void;
   onMinimize: () => void;
 };
-
-type Message = {
-    id: number;
-    sender: 'me' | 'other';
-    text?: string;
-    images?: string[];
-    audioUrl?: string;
-    avatarUrl?: string;
-}
 
 const initialMessages: Message[] = [
     { id: 1, sender: 'other', text: "Hey, how's it going?", avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' },
@@ -59,6 +50,7 @@ const olderMessages: Message[] = Array.from({ length: 15 }).map((_, i) => ({
 
 export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages.map(m => m.sender === 'other' ? {...m, avatarUrl: user.avatarUrl} : m));
+  const [lastSeenMessageId, setLastSeenMessageId] = useState<number | null>(14);
   const [inputValue, setInputValue] = useState('');
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -276,48 +268,58 @@ export default function Chatbox({ user, onClose, onMinimize }: ChatboxProps) {
                     </div>
                 )}
                 {messages.map((message) => (
-                    <div key={message.id} className={`flex items-end gap-2 ${message.sender === 'me' ? 'justify-end' : ''}`}>
-                         {message.sender === 'other' && (
-                            <Link href="/profile">
-                              <Avatar className="h-6 w-6">
-                                  <AvatarImage src={message.avatarUrl} alt={user.name} data-ai-hint="person portrait" />
-                                  <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                              </Avatar>
-                            </Link>
-                        )}
-                        
-                        <div className={cn(
-                            "rounded-lg max-w-[80%]",
-                            (message.images && message.images.length > 0) ? 'min-w-[150px]' : '',
-                            (message.audioUrl && !message.text && !message.images) ? 'w-[70%]' : '',
-                            (message.images && message.images.length > 0) || message.audioUrl ? "p-1" : "p-2",
-                            message.sender === 'me' ? 'bg-primary text-primary-foreground' : 'bg-accent'
-                        )}>
-                            {message.images && message.images.length > 0 && (
-                                <div className={cn(
-                                    "grid gap-1",
-                                    message.images.length > 1 ? "grid-cols-2" : "grid-cols-1",
-                                    message.text && 'mb-1'
-                                )}>
-                                    {message.images.map((img, index) => (
-                                        <div key={index} className="relative aspect-square">
-                                            <Image src={img} alt="sent image" fill className="rounded-md object-cover" />
-                                        </div>
-                                    ))}
-                                </div>
+                    <div key={message.id} className="flex flex-col">
+                        <div className={cn('flex items-end gap-2', message.sender === 'me' ? 'justify-end' : 'justify-start')}>
+                             {message.sender === 'other' && (
+                                <Link href="/profile">
+                                  <Avatar className="h-6 w-6">
+                                      <AvatarImage src={message.avatarUrl} alt={user.name} data-ai-hint="person portrait" />
+                                      <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                                  </Avatar>
+                                </Link>
                             )}
-                             {message.audioUrl && (
-                                <AudioPlayer 
-                                    audioUrl={message.audioUrl} 
-                                    isSender={message.sender === 'me'}
-                                />
-                            )}
-                            {message.text && 
-                                <p className={cn("text-sm break-words", (message.images || message.audioUrl) && "p-2")}>
-                                    {message.text}
-                                </p>
-                            }
+                            
+                            <div className={cn(
+                                "rounded-lg max-w-[80%]",
+                                (message.images && message.images.length > 0) ? 'min-w-[150px]' : '',
+                                (message.audioUrl && !message.text && !message.images) ? 'w-[70%]' : '',
+                                (message.images && message.images.length > 0) || message.audioUrl ? "p-1" : "p-2",
+                                message.sender === 'me' ? 'bg-primary text-primary-foreground' : 'bg-accent'
+                            )}>
+                                {message.images && message.images.length > 0 && (
+                                    <div className={cn(
+                                        "grid gap-1",
+                                        message.images.length > 1 ? "grid-cols-2" : "grid-cols-1",
+                                        message.text && 'mb-1'
+                                    )}>
+                                        {message.images.map((img, index) => (
+                                            <div key={index} className="relative aspect-square">
+                                                <Image src={img} alt="sent image" fill className="rounded-md object-cover" />
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                                 {message.audioUrl && (
+                                    <AudioPlayer 
+                                        audioUrl={message.audioUrl} 
+                                        isSender={message.sender === 'me'}
+                                    />
+                                )}
+                                {message.text && 
+                                    <p className={cn("text-sm break-words", (message.images || message.audioUrl) && "p-2")}>
+                                        {message.text}
+                                    </p>
+                                }
+                            </div>
                         </div>
+                        {message.sender === 'me' && lastSeenMessageId === message.id && (
+                             <div className="flex justify-end pr-8 mt-1">
+                                <Avatar className="h-4 w-4">
+                                    <AvatarImage src={user.avatarUrl} alt={user.name} />
+                                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
