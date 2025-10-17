@@ -32,30 +32,39 @@ export default function FeedbackDialog({ isOpen, onOpenChange }: FeedbackDialogP
 
   const handleTakeScreenshot = async () => {
     setIsCapturing(true);
-    // Hide the dialog temporarily to capture the screen behind it
     const dialogElement = document.querySelector('[data-feedback-dialog]');
-    if (dialogElement) (dialogElement.parentElement as HTMLElement).style.opacity = '0';
+    const dialogOverlay = dialogElement?.closest('[role="dialog"]')?.parentElement;
 
-    setTimeout(async () => {
-      try {
-        const canvas = await html2canvas(document.body, {
-          logging: false,
-          useCORS: true,
-          ignoreElements: (element) => element.hasAttribute('data-feedback-dialog'),
-        });
-        setScreenshot(canvas.toDataURL('image/png'));
-      } catch (error) {
-        console.error('Error taking screenshot:', error);
-        toast({
-          variant: 'destructive',
-          title: 'Screenshot Failed',
-          description: 'Could not capture the screen. Please try again.',
-        });
-      } finally {
-        setIsCapturing(false);
-        if (dialogElement) (dialogElement.parentElement as HTMLElement).style.opacity = '1';
+    if (dialogOverlay) {
+      dialogOverlay.style.display = 'none';
+    }
+
+    // A short delay to allow the DOM to update
+    await new Promise(resolve => setTimeout(resolve, 50));
+
+    try {
+      const appRoot = document.getElementById('__next');
+      if (!appRoot) {
+          throw new Error("App root element not found");
       }
-    }, 500); // Wait for dialog to become transparent
+      const canvas = await html2canvas(appRoot, {
+        logging: false,
+        useCORS: true,
+      });
+      setScreenshot(canvas.toDataURL('image/png'));
+    } catch (error) {
+      console.error('Error taking screenshot:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Screenshot Failed',
+        description: 'Could not capture the screen. Please try again.',
+      });
+    } finally {
+        if (dialogOverlay) {
+          dialogOverlay.style.display = '';
+        }
+        setIsCapturing(false);
+    }
   };
 
   const handleSendFeedback = () => {
