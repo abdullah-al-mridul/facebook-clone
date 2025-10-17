@@ -17,12 +17,14 @@ import {
   DropdownMenuSubContent,
   DropdownMenuGroup
 } from "@/components/ui/dropdown-menu"
-import { Sheet, SheetTrigger, SheetContent, SheetTitle } from '@/components/ui/sheet';
+import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
 import LeftSidebar from './left-sidebar';
 import { useTheme } from 'next-themes';
 import Link from '@/components/ui/link';
 import { Card } from '../ui/card';
 import VerifiedBadge from './verified-badge';
+import { useState } from 'react';
+import FeedbackDialog from './feedback-dialog';
 
 
 const NavLink = ({ href, icon: Icon, active = false }: { href: string, icon: React.ElementType, active?: boolean }) => {
@@ -44,8 +46,10 @@ type HeaderProps = {
 export default function Header({ onMessagesClick, onNotificationsClick }: HeaderProps) {
   const pathname = usePathname();
   const { setTheme } = useTheme();
+  const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState(false);
 
   return (
+    <>
     <header className="fixed top-0 left-0 right-0 h-14 bg-card border-b z-50 flex items-center justify-between px-2 sm:px-4">
       <div className="flex items-center gap-2">
          <Sheet>
@@ -55,7 +59,6 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
                 </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 w-full max-w-xs sm:max-w-sm">
-                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 <LeftSidebar />
             </SheetContent>
         </Sheet>
@@ -138,7 +141,7 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
                         </DropdownMenuItem>
                     </DropdownMenuSubContent>
                 </DropdownMenuSub>
-                 <DropdownMenuItem>
+                 <DropdownMenuItem onSelect={() => setIsFeedbackDialogOpen(true)}>
                       <div className="h-9 w-9 rounded-full bg-accent flex items-center justify-center">
                         <MessageSquareWarning />
                       </div>
@@ -155,5 +158,7 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
         </DropdownMenu>
       </div>
     </header>
+    <FeedbackDialog isOpen={isFeedbackDialogOpen} onOpenChange={setIsFeedbackDialogOpen} />
+    </>
   );
 }
