@@ -8,7 +8,7 @@ import { StoryType } from '@/types';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import VerifiedBadge from './verified-badge';
-import Link from 'next/link';
+import Link from '@/components/ui/link';
 
 type StoryViewerProps = {
   stories: StoryType[];

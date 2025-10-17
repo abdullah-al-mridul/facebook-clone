@@ -1,19 +1,12 @@
 
-import Link from 'next/link';
+import Link from '@/components/ui/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Users, UserSquare2, Bookmark, Clapperboard, History, Store, LayoutDashboard, Shield, MessageCircle } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import NProgress from 'nprogress';
 
 const SidebarLink = ({ href, icon: Icon, text }: { href: string; icon: React.ElementType; text: string }) => {
-    const pathname = usePathname();
-    const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-        if (pathname !== href) {
-            NProgress.start();
-        }
-    }
     return (
-        <Link href={href} onClick={handleLinkClick} className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
+        <Link href={href} className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
             <Icon className="w-7 h-7 text-primary" />
             <span className="font-semibold">{text}</span>
         </Link>
@@ -22,16 +15,11 @@ const SidebarLink = ({ href, icon: Icon, text }: { href: string; icon: React.Ele
 
 export default function LeftSidebar() {
   const pathname = usePathname();
-  const handleProfileClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (pathname !== '/profile') {
-        NProgress.start();
-    }
-  }
 
   return (
     <aside className="h-full w-full bg-card p-4 overflow-y-auto">
        <div className="flex flex-col gap-2 pt-14 lg:pt-0">
-        <Link href="/profile" onClick={handleProfileClick} className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
+        <Link href="/profile" className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
           <Avatar className="h-9 w-9">
             <AvatarImage src="https://placehold.co/40x40.png" alt="User" data-ai-hint="profile person" />
             <AvatarFallback>U</AvatarFallback>

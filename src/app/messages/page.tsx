@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import VerifiedBadge from '@/components/chrono-feed/verified-badge';
-import Link from 'next/link';
+import Link from '@/components/ui/link';
 import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui/card';
 import FullPageChat from '@/components/chrono-feed/full-page-chat';

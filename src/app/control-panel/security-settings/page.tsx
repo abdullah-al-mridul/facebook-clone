@@ -11,7 +11,7 @@ import Chatbox from '@/components/chrono-feed/chatbox';
 import MinimizedChat from '@/components/chrono-feed/minimized-chat';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Shield } from 'lucide-react';
-import Link from 'next/link';
+import Link from '@/components/ui/link';
 
 type ChatWindowState = {
   user: User;

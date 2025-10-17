@@ -10,7 +10,7 @@ import { Minus, Send, Image as ImageIcon, Mic, Square, Trash2, Smile, Phone, Vid
 import { useState, useRef, ChangeEvent, useEffect, useCallback } from "react";
 import Image from 'next/image';
 import VerifiedBadge from "./verified-badge";
-import Link from "next/link";
+import Link from '@/components/ui/link';
 import { cn } from "@/lib/utils";
 import AudioPlayer from "./audio-player";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";

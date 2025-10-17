@@ -1,13 +1,13 @@
 
 'use client';
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import type { User } from '@/types';
 import VerifiedBadge from './verified-badge';
-import Link from 'next/link';
+import Link from '@/components/ui/link';
 
 const dummyUsers: User[] = [
   { name: 'Sarah Miller', avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png', isVerified: true },

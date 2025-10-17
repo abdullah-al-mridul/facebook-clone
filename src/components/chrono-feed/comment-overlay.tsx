@@ -10,7 +10,7 @@ import { Button } from "../ui/button";
 import { Send } from "lucide-react";
 import { Separator } from "../ui/separator";
 import VerifiedBadge from "./verified-badge";
-import Link from "next/link";
+import Link from '@/components/ui/link';
 
 type CommentOverlayProps = {
   post: PostType;

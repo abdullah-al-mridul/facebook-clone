@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import Link from 'next/link';
+import Link from '@/components/ui/link';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Invalid email address.' }),

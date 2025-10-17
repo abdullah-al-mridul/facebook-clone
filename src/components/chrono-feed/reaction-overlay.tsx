@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { PostType, ReactionType, ReactionName } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import VerifiedBadge from "./verified-badge";
-import Link from "next/link";
+import Link from '@/components/ui/link';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import Image from "next/image";
 

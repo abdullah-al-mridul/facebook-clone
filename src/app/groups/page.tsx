@@ -12,7 +12,7 @@ import MinimizedChat from '@/components/chrono-feed/minimized-chat';
 import GroupCard from '@/components/chrono-feed/group-card';
 import { Button } from '@/components/ui/button';
 import CreateGroupDialog from '@/components/chrono-feed/create-group-dialog';
-import Link from 'next/link';
+import Link from '@/components/ui/link';
 
 type ChatWindowState = {
   user: User;

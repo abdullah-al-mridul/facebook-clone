@@ -11,7 +11,7 @@ import Chatbox from '@/components/chrono-feed/chatbox';
 import MinimizedChat from '@/components/chrono-feed/minimized-chat';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, FileText, BarChart3, Shield } from 'lucide-react';
-import Link from 'next/link';
+import Link from '@/components/ui/link';
 
 type ChatWindowState = {
   user: User;

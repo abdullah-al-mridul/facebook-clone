@@ -1,5 +1,4 @@
 
-
 'use client';
 import Image from 'next/image';
 import type { PostType } from '@/types';
@@ -13,7 +12,7 @@ import { useState } from 'react';
 import CommentOverlay from './comment-overlay';
 import ShareOverlay from './share-overlay';
 import VerifiedBadge from './verified-badge';
-import Link from 'next/link';
+import Link from '@/components/ui/link';
 import PostAnalytics from './post-analytics';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';

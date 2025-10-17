@@ -11,7 +11,7 @@ import { useRef, useState } from "react";
 import ImageCropDialog from "./image-crop-dialog";
 import EditProfileDialog from "./edit-profile-dialog";
 import { useToast } from "@/hooks/use-toast";
-import Link from "next/link";
+import Link from '@/components/ui/link';
 
 type ProfileHeaderProps = {
     activeTab: string;
