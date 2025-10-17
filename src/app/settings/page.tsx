@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '@/components/chrono-feed/header';
 import LeftSidebar from '@/components/chrono-feed/left-sidebar';
 import MessageDrawer from '@/components/chrono-feed/message-drawer';
@@ -40,6 +40,12 @@ export default function SettingsPage() {
   const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] = useState(false);
   const [openChats, setOpenChats] = useState<ChatWindowState[]>([]);
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
 
   const handleUserSelect = (user: User) => {
     setIsMessageDrawerOpen(false);
@@ -105,29 +111,31 @@ export default function SettingsPage() {
                     <CardContent>
                         <Label className="font-semibold">Theme</Label>
                         <p className="text-sm text-muted-foreground mb-4">Select your preferred color scheme.</p>
-                        <RadioGroup defaultValue={theme} onValueChange={setTheme} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
-                                <RadioGroupItem value="light" id="light" className="sr-only" />
-                                <Label htmlFor="light" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary">
-                                    <Sun className="mb-3 h-6 w-6" />
-                                    Light
-                                </Label>
-                            </div>
-                            <div>
-                                <RadioGroupItem value="dark" id="dark" className="sr-only" />
-                                <Label htmlFor="dark" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary">
-                                    <Moon className="mb-3 h-6 w-6" />
-                                    Dark
-                                </Label>
-                            </div>
-                             <div>
-                                <RadioGroupItem value="system" id="system" className="sr-only" />
-                                <Label htmlFor="system" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary">
-                                    <Laptop className="mb-3 h-6 w-6" />
-                                    System
-                                </Label>
-                            </div>
-                        </RadioGroup>
+                        {mounted && (
+                          <RadioGroup defaultValue={theme} onValueChange={setTheme} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                              <div>
+                                  <RadioGroupItem value="light" id="light" className="sr-only" />
+                                  <Label htmlFor="light" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary">
+                                      <Sun className="mb-3 h-6 w-6" />
+                                      Light
+                                  </Label>
+                              </div>
+                              <div>
+                                  <RadioGroupItem value="dark" id="dark" className="sr-only" />
+                                  <Label htmlFor="dark" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary">
+                                      <Moon className="mb-3 h-6 w-6" />
+                                      Dark
+                                  </Label>
+                              </div>
+                               <div>
+                                  <RadioGroupItem value="system" id="system" className="sr-only" />
+                                  <Label htmlFor="system" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary">
+                                      <Laptop className="mb-3 h-6 w-6" />
+                                      System
+                                  </Label>
+                              </div>
+                          </RadioGroup>
+                        )}
                     </CardContent>
                 </Card>
                  <Card>
@@ -172,4 +180,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-
