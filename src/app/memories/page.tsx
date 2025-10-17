@@ -21,6 +21,7 @@ const memoryPost: PostType = {
     id: 'memory-1',
     user: { name: 'Current User', avatarUrl: 'https://placehold.co/40x40.png' },
     timestamp: '1 year ago',
+    privacy: 'Only Me',
     content: 'Throwback to this amazing trip! Can\'t believe it\'s already been a year. We need to go back!',
     imageUrl: 'https://placehold.co/600x400.png',
     imageHint: 'travel beach',
