@@ -4,6 +4,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ThemeProvider } from 'next-themes';
+import { NProgressBar } from '@/components/ui/nprogress';
 
 export const metadata: Metadata = {
   title: 'ChronoFeed',
@@ -29,6 +30,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
+            <NProgressBar />
             <TooltipProvider>
                 {children}
             </TooltipProvider>
@@ -38,5 +40,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-    
