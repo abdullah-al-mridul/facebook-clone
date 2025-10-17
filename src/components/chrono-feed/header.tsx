@@ -20,13 +20,23 @@ import {
 import { Sheet, SheetTrigger, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import LeftSidebar from './left-sidebar';
 import { useTheme } from 'next-themes';
+import NProgress from 'nprogress';
 
-const NavLink = ({ href, icon: Icon, active = false }: { href: string, icon: React.ElementType, active?: boolean }) => (
-  <Link href={href} className={`px-4 lg:px-8 py-3 relative flex items-center justify-center h-full ${active ? 'text-primary' : 'text-muted-foreground hover:bg-accent'} rounded-lg transition-colors`}>
-    <Icon className="w-7 h-7" />
-    {active && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary"></div>}
-  </Link>
-);
+const NavLink = ({ href, icon: Icon, active = false }: { href: string, icon: React.ElementType, active?: boolean }) => {
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (usePathname() !== href) {
+        NProgress.start();
+    }
+  }
+
+  return (
+    <Link href={href} onClick={handleLinkClick} className={`px-4 lg:px-8 py-3 relative flex items-center justify-center h-full ${active ? 'text-primary' : 'text-muted-foreground hover:bg-accent'} rounded-lg transition-colors`}>
+        <Icon className="w-7 h-7" />
+        {active && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary"></div>}
+    </Link>
+  );
+};
+
 
 type HeaderProps = {
   onMessagesClick: () => void;
@@ -37,6 +47,12 @@ type HeaderProps = {
 export default function Header({ onMessagesClick, onNotificationsClick }: HeaderProps) {
   const pathname = usePathname();
   const { setTheme } = useTheme();
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname !== '/') {
+      NProgress.start();
+    }
+  }
   
   return (
     <header className="fixed top-0 left-0 right-0 h-14 bg-card border-b z-50 flex items-center justify-between px-2 sm:px-4">
@@ -52,7 +68,7 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
                 <LeftSidebar />
             </SheetContent>
         </Sheet>
-        <Link href="/" className="text-2xl font-bold text-primary">
+        <Link href="/" onClick={handleLogoClick} className="text-2xl font-bold text-primary">
           <span className="hidden sm:inline">Facemusk</span>
           <span className="sm:hidden text-3xl">F</span>
         </Link>
@@ -82,10 +98,10 @@ export default function Header({ onMessagesClick, onNotificationsClick }: Header
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <Link href="/profile">
+            <Link href="/profile" onClick={() => NProgress.start()}>
               <DropdownMenuItem>Profile</DropdownMenuItem>
             </Link>
-             <Link href="/settings">
+             <Link href="/settings" onClick={() => NProgress.start()}>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
              </Link>
              <DropdownMenuSub>
