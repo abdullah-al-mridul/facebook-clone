@@ -43,11 +43,7 @@ export default function FeedbackDialog({ isOpen, onOpenChange }: FeedbackDialogP
     await new Promise(resolve => setTimeout(resolve, 50));
 
     try {
-      const appRoot = document.getElementById('__next');
-      if (!appRoot) {
-          throw new Error("App root element not found");
-      }
-      const canvas = await html2canvas(appRoot, {
+      const canvas = await html2canvas(document.body, {
         logging: false,
         useCORS: true,
       });
