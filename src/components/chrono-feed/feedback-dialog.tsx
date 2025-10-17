@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -15,7 +15,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import html2canvas from 'html2canvas';
 import Image from 'next/image';
-import { Loader2, Camera } from 'lucide-react';
+import { Loader2, Camera, X } from 'lucide-react';
+import { Label } from '../ui/label';
 
 type FeedbackDialogProps = {
   isOpen: boolean;
@@ -29,25 +30,17 @@ export default function FeedbackDialog({ isOpen, onOpenChange }: FeedbackDialogP
   const [isSending, setIsSending] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (isOpen) {
-      handleTakeScreenshot();
-    } else {
-      // Reset state when closing
-      setScreenshot(null);
-      setFeedbackText('');
-    }
-  }, [isOpen]);
-
   const handleTakeScreenshot = async () => {
     setIsCapturing(true);
-    // Timeout to allow dialog to open and render before screenshot
+    // Hide the dialog temporarily to capture the screen behind it
+    const dialogElement = document.querySelector('[data-feedback-dialog]');
+    if (dialogElement) (dialogElement.parentElement as HTMLElement).style.opacity = '0';
+
     setTimeout(async () => {
       try {
         const canvas = await html2canvas(document.body, {
           logging: false,
           useCORS: true,
-          // Exclude the dialog itself from the screenshot
           ignoreElements: (element) => element.hasAttribute('data-feedback-dialog'),
         });
         setScreenshot(canvas.toDataURL('image/png'));
@@ -60,8 +53,9 @@ export default function FeedbackDialog({ isOpen, onOpenChange }: FeedbackDialogP
         });
       } finally {
         setIsCapturing(false);
+        if (dialogElement) (dialogElement.parentElement as HTMLElement).style.opacity = '1';
       }
-    }, 500);
+    }, 500); // Wait for dialog to become transparent
   };
 
   const handleSendFeedback = () => {
@@ -83,15 +77,28 @@ export default function FeedbackDialog({ isOpen, onOpenChange }: FeedbackDialogP
       });
       setIsSending(false);
       onOpenChange(false);
+      // Reset state after closing
+      setTimeout(() => {
+        setScreenshot(null);
+        setFeedbackText('');
+      }, 300);
       toast({
         title: 'Feedback Sent!',
         description: 'Thank you for helping us improve.',
       });
     }, 1500);
   };
+  
+  const handleClose = (open: boolean) => {
+    if (!open) {
+        setScreenshot(null);
+        setFeedbackText('');
+    }
+    onOpenChange(open);
+  }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md" data-feedback-dialog>
         <DialogHeader>
           <DialogTitle>Give feedback</DialogTitle>
@@ -101,25 +108,7 @@ export default function FeedbackDialog({ isOpen, onOpenChange }: FeedbackDialogP
         </DialogHeader>
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Screenshot</label>
-            <div className="relative aspect-video w-full rounded-md border bg-accent flex items-center justify-center">
-              {isCapturing ? (
-                <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                  <Loader2 className="h-8 w-8 animate-spin" />
-                  <span>Capturing screen...</span>
-                </div>
-              ) : screenshot ? (
-                <Image src={screenshot} alt="Screenshot preview" fill className="object-contain rounded-md" />
-              ) : (
-                 <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <Camera className="h-8 w-8" />
-                    <span>No screenshot</span>
-                 </div>
-              )}
-            </div>
-          </div>
-          <div className="space-y-2">
-             <label htmlFor="feedback-text" className="text-sm font-medium">Your feedback</label>
+             <Label htmlFor="feedback-text">Your feedback</Label>
             <Textarea
               id="feedback-text"
               placeholder="Describe your issue or share your ideas..."
@@ -128,10 +117,31 @@ export default function FeedbackDialog({ isOpen, onOpenChange }: FeedbackDialogP
               rows={5}
             />
           </div>
+          <div className="space-y-2">
+            <Label>Screenshot</Label>
+             {isCapturing ? (
+                 <div className="relative aspect-video w-full rounded-md border bg-accent flex items-center justify-center text-muted-foreground">
+                    <Loader2 className="h-8 w-8 animate-spin" />
+                    <span className="ml-2">Capturing screen...</span>
+                </div>
+              ) : screenshot ? (
+                <div className="relative aspect-video w-full rounded-md border">
+                    <Image src={screenshot} alt="Screenshot preview" fill className="object-contain rounded-md" />
+                    <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={() => setScreenshot(null)}>
+                        <X className="h-4 w-4" />
+                    </Button>
+                </div>
+              ) : (
+                 <Button variant="outline" className="w-full" onClick={handleTakeScreenshot}>
+                    <Camera className="mr-2 h-4 w-4" />
+                    Include screenshot
+                 </Button>
+              )}
+          </div>
         </div>
         <DialogFooter>
             <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSending}>Cancel</Button>
-            <Button onClick={handleSendFeedback} disabled={isSending}>
+            <Button onClick={handleSendFeedback} disabled={isSending || isCapturing}>
                 {isSending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isSending ? 'Sending...' : 'Send feedback'}
             </Button>
