@@ -1,16 +1,18 @@
 
 'use client';
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import type { User } from '@/types';
+import VerifiedBadge from './verified-badge';
+import Link from '@/components/ui/link';
 
 const dummyUsers: User[] = [
-  { name: 'Sarah Miller', avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png' },
+  { name: 'Sarah Miller', avatarUrl: 'https://placehold.co/40x40/E5E7EB/4B5563.png', isVerified: true },
   { name: 'Michael Chen', avatarUrl: 'https://placehold.co/40x40/9CA3AF/FFFFFF.png' },
-  { name: 'Emily Davis', avatarUrl: 'https://placehold.co/40x40/F3F4F6/1F2937.png' },
+  { name: 'Emily Davis', avatarUrl: 'https://placehold.co/40x40/F3F4F6/1F2937.png', isVerified: true },
   { name: 'David Rodriguez', avatarUrl: 'https://placehold.co/40x40.png' },
   { name: 'Jessica White', avatarUrl: 'https://placehold.co/40x40/D1D5DB/374151.png' },
 ];
@@ -32,12 +34,19 @@ const dummyMessages = dummyUsers.map((user, index) => ({
 
 const MessageItem = ({ message, onUserSelect }: { message: typeof dummyMessages[0], onUserSelect: (user: User) => void }) => (
     <div onClick={() => onUserSelect(message.user)} className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors cursor-pointer">
-      <Avatar className="h-14 w-14">
-        <AvatarImage src={message.user.avatarUrl} alt={message.user.name} data-ai-hint="person portrait" />
-        <AvatarFallback>{message.user.name.charAt(0)}</AvatarFallback>
-      </Avatar>
+      <Link href="/profile" onClick={(e) => e.stopPropagation()}>
+        <Avatar className="h-14 w-14">
+          <AvatarImage src={message.user.avatarUrl} alt={message.user.name} data-ai-hint="person portrait" />
+          <AvatarFallback>{message.user.name.charAt(0)}</AvatarFallback>
+        </Avatar>
+      </Link>
       <div className="flex-1 overflow-hidden">
-        <p className="font-semibold truncate">{message.user.name}</p>
+        <div className="flex items-center gap-1">
+          <Link href="/profile" onClick={(e) => e.stopPropagation()} className="hover:underline">
+            <p className="font-semibold truncate">{message.user.name}</p>
+          </Link>
+          {message.user.isVerified && <VerifiedBadge />}
+        </div>
         <p className={`text-sm truncate ${message.unread ? 'text-foreground font-bold' : 'text-muted-foreground'}`}>
             {message.lastMessage}
         </p>
@@ -59,7 +68,7 @@ type MessageDrawerProps = {
 export default function MessageDrawer({ isOpen, onOpenChange, onUserSelect }: MessageDrawerProps) {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:w-[400px] p-4 flex flex-col">
+      <SheetContent className="w-full max-w-md sm:w-[400px] p-4 flex flex-col">
         <SheetHeader>
           <SheetTitle className="text-2xl font-bold">Chats</SheetTitle>
         </SheetHeader>

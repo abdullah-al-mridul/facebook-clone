@@ -9,6 +9,8 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Send } from "lucide-react";
 import { Separator } from "../ui/separator";
+import VerifiedBadge from "./verified-badge";
+import Link from '@/components/ui/link';
 
 type CommentOverlayProps = {
   post: PostType;
@@ -18,12 +20,19 @@ type CommentOverlayProps = {
 
 const Comment = ({ comment }: { comment: NonNullable<PostType['commentData']>[0] }) => (
     <div className="flex items-start gap-3">
-        <Avatar className="h-8 w-8">
-            <AvatarImage src={comment.user.avatarUrl} alt={comment.user.name} data-ai-hint="person portrait"/>
-            <AvatarFallback>{comment.user.name.charAt(0)}</AvatarFallback>
-        </Avatar>
+        <Link href="/profile">
+            <Avatar className="h-8 w-8">
+                <AvatarImage src={comment.user.avatarUrl} alt={comment.user.name} data-ai-hint="person portrait"/>
+                <AvatarFallback>{comment.user.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+        </Link>
         <div className="bg-accent rounded-lg p-2 flex-1">
-            <p className="font-semibold text-sm">{comment.user.name}</p>
+            <div className="flex items-center gap-1">
+                <Link href="/profile">
+                    <p className="font-semibold text-sm hover:underline">{comment.user.name}</p>
+                </Link>
+                {comment.user.isVerified && <VerifiedBadge />}
+            </div>
             <p className="text-sm">{comment.content}</p>
         </div>
     </div>
@@ -36,8 +45,11 @@ export default function CommentOverlay({ post, isOpen, onOpenChange }: CommentOv
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col p-0">
         <DialogHeader className="p-4 border-b">
-          <DialogTitle className="text-center text-xl font-bold">
-            {post.user.name}'s Post
+          <DialogTitle className="text-center text-xl font-bold flex items-center justify-center gap-2">
+             <Link href="/profile" className="hover:underline">
+                <span>{post.user.name}'s Post</span>
+              </Link>
+            {post.user.isVerified && <VerifiedBadge />}
           </DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto">

@@ -4,6 +4,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { User } from "@/types";
 import { UserPlus, MessageCircle } from "lucide-react";
+import VerifiedBadge from "./verified-badge";
 
 type FriendCardProps = {
     user: User;
@@ -17,7 +18,10 @@ export default function FriendCard({ user }: FriendCardProps) {
                     <AvatarImage src={user.avatarUrl} alt={user.name} data-ai-hint="person portrait"/>
                     <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                 </Avatar>
-                <h3 className="font-semibold text-lg">{user.name}</h3>
+                <div className="flex items-center gap-1 mb-1">
+                    <h3 className="font-semibold text-lg">{user.name}</h3>
+                    {user.isVerified && <VerifiedBadge />}
+                </div>
                 <p className="text-sm text-muted-foreground mb-4">15 mutual friends</p>
                 <div className="w-full flex flex-col gap-2">
                     <Button>

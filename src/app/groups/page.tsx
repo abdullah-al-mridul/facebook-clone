@@ -10,6 +10,9 @@ import { useState } from 'react';
 import Chatbox from '@/components/chrono-feed/chatbox';
 import MinimizedChat from '@/components/chrono-feed/minimized-chat';
 import GroupCard from '@/components/chrono-feed/group-card';
+import { Button } from '@/components/ui/button';
+import CreateGroupDialog from '@/components/chrono-feed/create-group-dialog';
+import Link from '@/components/ui/link';
 
 type ChatWindowState = {
   user: User;
@@ -17,15 +20,16 @@ type ChatWindowState = {
 };
 
 const dummyGroups = [
-    { name: 'Next.js Developers', members: '125k members', coverUrl: 'https://placehold.co/400x150.png', coverHint: 'code technology' },
-    { name: 'React Community', members: '2.3M members', coverUrl: 'https://placehold.co/400x150.png', coverHint: 'abstract community' },
-    { name: 'Design Geeks', members: '50k members', coverUrl: 'https://placehold.co/400x150.png', coverHint: 'design art' },
-    { name: 'Food Lovers', members: '780k members', coverUrl: 'https://placehold.co/400x150.png', coverHint: 'food dinner' },
+    { id: '1', name: 'Next.js Developers', members: '125k members', coverUrl: 'https://placehold.co/400x150.png', coverHint: 'code technology' },
+    { id: '2', name: 'React Community', members: '2.3M members', coverUrl: 'https://placehold.co/400x150.png', coverHint: 'abstract community' },
+    { id: '3', name: 'Design Geeks', members: '50k members', coverUrl: 'https://placehold.co/400x150.png', coverHint: 'design art' },
+    { id: '4', name: 'Food Lovers', members: '780k members', coverUrl: 'https://placehold.co/400x150.png', coverHint: 'food dinner' },
 ]
 
 export default function GroupsPage() {
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
   const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] = useState(false);
+  const [isCreateGroupDialogOpen, setIsCreateGroupDialogOpen] = useState(false);
   const [openChats, setOpenChats] = useState<ChatWindowState[]>([]);
 
   const handleUserSelect = (user: User) => {
@@ -76,16 +80,23 @@ export default function GroupsPage() {
         isOpen={isNotificationDrawerOpen}
         onOpenChange={setIsNotificationDrawerOpen}
       />
+      <CreateGroupDialog isOpen={isCreateGroupDialogOpen} onOpenChange={setIsCreateGroupDialogOpen} />
+
       <div className="flex">
         <div className="fixed top-14 left-0 h-[calc(100vh-56px)] w-72 hidden lg:block">
           <LeftSidebar />
         </div>
         <main className="flex-1 lg:pl-72 pt-14">
           <div className="p-4 sm:p-6 lg:p-8 w-full max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold mb-4">Groups</h1>
+            <div className="flex justify-between items-center mb-4">
+                <h1 className="text-2xl font-bold">Groups</h1>
+                <Button onClick={() => setIsCreateGroupDialogOpen(true)}>Create Group</Button>
+            </div>
              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {dummyGroups.map((group) => (
-                    <GroupCard key={group.name} group={group} />
+                    <Link href={`/groups/${group.id}`} key={group.id}>
+                        <GroupCard group={group} />
+                    </Link>
                 ))}
             </div>
           </div>
