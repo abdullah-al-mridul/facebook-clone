@@ -2,8 +2,11 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IPost extends Document {
   user: mongoose.Types.ObjectId;
+  group?: mongoose.Types.ObjectId;
   content: string;
   images: string[];
+  videoUrl?: string;
+  postType: "text" | "image" | "video";
   likes: mongoose.Types.ObjectId[];
   comments: mongoose.Types.ObjectId[];
   shares: number;
@@ -15,8 +18,15 @@ export interface IPost extends Document {
 const PostSchema: Schema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    group: { type: Schema.Types.ObjectId, ref: "Group" },
     content: { type: String, required: true },
     images: [{ type: String }],
+    videoUrl: { type: String },
+    postType: {
+      type: String,
+      enum: ["text", "image", "video"],
+      default: "text",
+    },
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     shares: { type: Number, default: 0 },

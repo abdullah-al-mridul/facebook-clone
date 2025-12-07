@@ -5,23 +5,51 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { ApiResponse } from "../utils/ApiResponse";
 import { ApiError } from "../utils/ApiError";
 import { AuthRequest } from "../middlewares/authMiddleware";
+import { uploadToCloudinary } from "../middlewares/uploadMiddleware";
 
 // @desc    Create a new post
 // @route   POST /api/posts
 // @access  Private
 export const createPost = asyncHandler(async (req: Request, res: Response) => {
-  const { content, images, privacy } = req.body;
+  const { content, privacy, group } = req.body;
   const authReq = req as AuthRequest;
 
-  if (!content && (!images || images.length === 0)) {
-    throw new ApiError(400, "Post content or image is required");
+  let images: string[] = [];
+  let videoUrl: string = "";
+  let postType: "text" | "image" | "video" = "text";
+
+  if (req.files && Array.isArray(req.files)) {
+    for (const file of req.files) {
+      if (file.mimetype.startsWith("image/")) {
+        const url = await uploadToCloudinary(
+          (file as Express.Multer.File).buffer,
+          "posts"
+        );
+        images.push(url);
+        postType = "image";
+      } else if (file.mimetype.startsWith("video/")) {
+        const url = await uploadToCloudinary(
+          (file as Express.Multer.File).buffer,
+          "videos"
+        );
+        videoUrl = url;
+        postType = "video";
+      }
+    }
+  }
+
+  if (!content && images.length === 0 && !videoUrl) {
+    throw new ApiError(400, "Post content or media is required");
   }
 
   const post = await Post.create({
     user: (authReq.user as any)._id,
     content,
     images,
+    videoUrl,
+    postType,
     privacy,
+    group: group || undefined,
   });
 
   const populatedPost = await Post.findById(post._id).populate(

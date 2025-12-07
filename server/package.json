@@ -14,6 +14,8 @@
   "license": "ISC",
   "packageManager": "pnpm@10.12.4",
   "dependencies": {
+    "@types/generic-pool": "^3.8.3",
+    "@types/nodemailer": "^7.0.4",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.8.0",
     "cors": "^2.8.5",
@@ -23,6 +25,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.0.1",
     "multer": "^2.0.2",
+    "nodemailer": "^7.0.11",
     "socket.io": "^4.8.1",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"

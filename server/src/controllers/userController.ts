@@ -4,6 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { ApiResponse } from "../utils/ApiResponse";
 import { ApiError } from "../utils/ApiError";
 import { AuthRequest } from "../middlewares/authMiddleware";
+import { uploadToCloudinary } from "../middlewares/uploadMiddleware";
 
 // @desc    Get user profile by ID
 // @route   GET /api/users/:id
@@ -31,7 +32,25 @@ export const updateUserProfile = asyncHandler(
       throw new ApiError(401, "Not authorized to update this profile");
     }
 
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    const updates = { ...req.body };
+
+    if (req.files && Array.isArray(req.files)) {
+      for (const file of req.files) {
+        if (file.fieldname === "profilePicture") {
+          updates.profilePicture = await uploadToCloudinary(
+            (file as Express.Multer.File).buffer,
+            "profiles"
+          );
+        } else if (file.fieldname === "coverPhoto") {
+          updates.coverPhoto = await uploadToCloudinary(
+            (file as Express.Multer.File).buffer,
+            "covers"
+          );
+        }
+      }
+    }
+
+    const user = await User.findByIdAndUpdate(req.params.id, updates, {
       new: true,
       runValidators: true,
     }).select("-password");

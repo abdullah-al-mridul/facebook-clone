@@ -15,6 +15,11 @@ import userRoutes from "./routes/userRoutes";
 import chatRoutes from "./routes/chatRoutes";
 import verificationRoutes from "./routes/verificationRoutes";
 import analyticsRoutes from "./routes/analyticsRoutes";
+import groupRoutes from "./routes/groupRoutes";
+import productRoutes from "./routes/productRoutes";
+import savedRoutes from "./routes/savedRoutes";
+import notificationRoutes from "./routes/notificationRoutes";
+import videoRoutes from "./routes/videoRoutes";
 
 dotenv.config();
 connectDB();
@@ -45,6 +50,11 @@ app.use("/api/verification", verificationRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/groups", groupRoutes);
+app.use("/api/marketplace", productRoutes);
+app.use("/api/saved", savedRoutes);
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/watch", videoRoutes);
 
 app.get("/", (req, res) => {
   res.send("Facebook Clone API is running");

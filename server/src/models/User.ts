@@ -12,8 +12,10 @@ export interface IUser extends Document {
   bio: string;
   friends: mongoose.Types.ObjectId[];
   friendRequests: mongoose.Types.ObjectId[];
-  createdAt: Date;
-  isVerified: boolean;
+  isVerified: boolean; // ID Verification (Blue tick)
+  isEmailVerified: boolean;
+  otp?: string;
+  otpExpires?: Date;
   matchPassword(enteredPassword: string): Promise<boolean>;
 }
 
@@ -30,6 +32,9 @@ const UserSchema: Schema = new Schema(
     friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
     friendRequests: [{ type: Schema.Types.ObjectId, ref: "User" }],
     isVerified: { type: Boolean, default: false },
+    isEmailVerified: { type: Boolean, default: false },
+    otp: { type: String },
+    otpExpires: { type: Date },
   },
   { timestamps: true }
 );
